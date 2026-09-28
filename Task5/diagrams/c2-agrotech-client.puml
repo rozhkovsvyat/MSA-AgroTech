@@ -14,7 +14,7 @@ Person(manager, "Сотрудник AgroTech X", "Ответственный з�
 System_Ext(cab, "Кабинеты сотрудников (AS-IS)", "Существующие web / mobile-клиенты AgroTech")
 System_Boundary(local, "Фермы AgroTech X — повторяемая локальная часть") {
  Container(notify, "Оповещение ферм", "C# / .NET Worker", "Доставка терминалу и сирене")
- Container(ui, "Терминалы ферм", "React + Vite; .NET агент", "Тревоги без WAN")
+ Container(ui, "Терминалы ферм", "React + Vite MFE; .NET агент", "Тревоги без WAN")
  Container(video, "Видеоаналитика", "C# / ML SDK", "Распознавание и публикация наблюдений")
  ContainerDb(farm, "Журналы ферм 1…N", "Apache Kafka", "Кластер на ферму; RF=5 / minISR=3")
 }

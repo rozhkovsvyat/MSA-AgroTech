@@ -1,0 +1,39 @@
+@startuml
+!define RELATIVE_INCLUDE true
+!include ../../diagrams/vendor/c4-plantuml/C4_Container.puml
+LAYOUT_LANDSCAPE()
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam nodesep 35
+skinparam ranksep 90
+show stereotype
+title AgroTech X — C2, микрофронтенды
+Person(user, "Сотрудник", "Роль и доступные фермы")
+System_Boundary(product, "AgroTech X — web-приложения и API") {
+ Container(shell, "Оболочка", "React + Vite", "Навигация, контекст,\nзакреплённые версии модулей")
+ Container(inc, "Инциденты", "React + Vite", "Карточки, подрепорты, реакция")
+ Container(eq, "Оборудование", "React + Vite", "Состояние, команды, результаты")
+ Container(analytics, "Аналитика", "React + Vite", "История, отчёты, показатели")
+ Container(saas, "Управление SaaS", "React + Vite", "Клиенты, фермы, тарифы")
+ Container(api, "Локальный / публичный API", "C# / ASP.NET Core", "Права, tenant, чтение и команды;\nвыбирается по размещению UI")
+ Container(assets, "Раздача UI-артефактов", "HTTPS / static files", "Манифест, версии JS/CSS;\nна ферме — локальные файлы")
+}
+Rel_R(user, shell, "Работает с разделами", "Браузер")
+Rel_D(shell, assets, "Загружает проверенный выпуск", "HTTPS")
+Rel_R(shell, inc, "Подключает маршрут", "Версионируемый UI-контракт")
+Rel_R(shell, eq, "Подключает маршрут", "Версионируемый UI-контракт")
+Rel_R(shell, analytics, "Подключает маршрут центра", "Версионируемый UI-контракт")
+Rel_R(shell, saas, "Подключает маршрут центра", "Версионируемый UI-контракт")
+Rel_R(inc, api, "Карточки и действия", "HTTPS / SSE")
+Rel_R(eq, api, "Состояние и команды", "HTTPS")
+Rel_R(analytics, api, "Запрашивает отчёты", "HTTPS")
+Rel_R(saas, api, "Настройки и подписка", "HTTPS")
+Lay_D(inc, eq)
+Lay_D(eq, analytics)
+Lay_D(analytics, saas)
+legend right
+|<#FFFFFF><color:#333333> Обозначения |
+|<#08427B><color:white> Пользователь |
+|<#438DD5><color:white> Контейнер |
+endlegend
+@enduml

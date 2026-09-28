@@ -44,7 +44,7 @@ def verify():
 
  html_targets=check_html() if (ROOT/'index.html').exists() else 0
  diagrams=[]; labels_checked=0
- expected=set('network c3-incidents-a c3-incidents-b access-flow c1-variant-a c1-variant-b deployment-a deployment-b c2-a-alternative c2-b-primary c2-center c2-center-ai-access c2-equipment c2-equipment-a c2-escalation alert-dynamics c3-variant-a c3-variant-b c4-variant-a c4-variant-b c4-incident c4-equipment c1-saas c2-agrotech-client c2-saas-tobe isolation-schema isolation-database isolation-instance'.split())
+ expected=set('c2-microfrontends network c3-incidents-a c3-incidents-b access-flow c1-variant-a c1-variant-b deployment-a deployment-b c2-a-alternative c2-b-primary c2-center c2-center-ai-access c2-equipment c2-equipment-a c2-escalation alert-dynamics c3-variant-a c3-variant-b c4-variant-a c4-variant-b c4-incident c4-equipment c1-saas c2-agrotech-client c2-saas-tobe isolation-schema isolation-database isolation-instance'.split())
  actual={p.stem for p in ROOT.glob('Task*/diagrams/*.puml')}
  assert actual==expected,(actual ^ expected)
  for f in sorted(ROOT.glob('Task*/diagrams/*.puml')):

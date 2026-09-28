@@ -17,6 +17,7 @@
 | Task2 / c2-equipment-a | [SVG](../Task2/diagrams/c2-equipment-a.svg) · [PNG](../Task2/diagrams/c2-equipment-a.png) | [PlantUML](../Task2/diagrams/c2-equipment-a.puml) |
 | Task2 / c2-equipment | [SVG](../Task2/diagrams/c2-equipment.svg) · [PNG](../Task2/diagrams/c2-equipment.png) | [PlantUML](../Task2/diagrams/c2-equipment.puml) |
 | Task2 / c2-escalation | [SVG](../Task2/diagrams/c2-escalation.svg) · [PNG](../Task2/diagrams/c2-escalation.png) | [PlantUML](../Task2/diagrams/c2-escalation.puml) |
+| Task2 / c2-microfrontends | [SVG](../Task2/diagrams/c2-microfrontends.svg) · [PNG](../Task2/diagrams/c2-microfrontends.png) | [PlantUML](../Task2/diagrams/c2-microfrontends.puml) |
 | Task3 / alert-dynamics | [SVG](../Task3/diagrams/alert-dynamics.svg) · [PNG](../Task3/diagrams/alert-dynamics.png) | [PlantUML](../Task3/diagrams/alert-dynamics.puml) |
 | Task3 / c3-incidents-a | [SVG](../Task3/diagrams/c3-incidents-a.svg) · [PNG](../Task3/diagrams/c3-incidents-a.png) | [PlantUML](../Task3/diagrams/c3-incidents-a.puml) |
 | Task3 / c3-incidents-b | [SVG](../Task3/diagrams/c3-incidents-b.svg) · [PNG](../Task3/diagrams/c3-incidents-b.png) | [PlantUML](../Task3/diagrams/c3-incidents-b.puml) |

@@ -14,7 +14,7 @@ System_Ext(device, "Оборудование", "Корм, вода, фильтр
 System(center, "Центр AgroTech X", "Намерения и справочники")
 System_Boundary(farm, "Локальная часть AgroTech X / вариант А") {
  Container(sync, "Синхронизация", "C# / .NET Worker", "Outbox вверх, намерения и политики вниз")
- Container(ui, "Терминал фермы", "React + Vite; .NET агент", "Команды и фактический исход")
+ Container(ui, "Терминал фермы", "React + Vite MFE; .NET агент", "Команды и фактический исход")
  Container(app, "Приложение фермы", "C# / .NET", "Модули прав, допуска, инцидентов,\nучёта и метрик в одном процессе")
  Container(adapter, "Шлюз оборудования", "C# / SDK устройств", "Дедупликация, epoch, опрос результата")
  ContainerDb(journal, "Журнал и outbox", "PostgreSQL", "Допуски, команды, исходы и учёт")
