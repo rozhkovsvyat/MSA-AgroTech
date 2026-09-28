@@ -1,0 +1,54 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam shadowing false
+skinparam classBackgroundColor #85BBF0
+skinparam classBorderColor #1168BD
+skinparam ArrowColor #555555
+skinparam nodesep 45
+skinparam ranksep 70
+hide empty members
+title AgroTech X — обнаружение, два канала тревоги и восстановление журнала
+
+hide footbox
+skinparam maxMessageSize 220
+participant "Камера / обработчик" as v
+participant "Терминал" as t
+participant "Сигнализация" as s
+participant "Буфер на устройстве" as b
+participant "Доменный журнал" as k
+participant "Сервис инцидентов" as i
+participant "ИИ-триаж" as ai
+v -> v : Возникновение опасности в кадре\n→ распознавание
+par Немедленное локальное оповещение
+ v -> t : Observation(id, zone, occurred_at)
+ t -> t : Создать / дополнить карточку; показать тревогу
+ t --> v : ACK доставки (не принятие человеком)
+else Независимый получатель
+ v -> s : Alert(id, zone)
+ s --> v : ACK сигнала
+else Запись и обмен
+ v -> b : Сохранить факт и задания доставки
+ b -> k : Публиковать с постоянным ID
+ alt Журнал доступен
+  k --> b : ACK
+ else Нет подтверждения
+  b -> b : Сохранить pending / повторить позже
+ end
+end
+k -> i : Наблюдения после восстановления
+ i -> t : Канонический ID + связь локальных карточек
+k -> ai : Подрепорты для анализа
+ai -> i : Рекомендация отдельным фактом
+ i -> t : Дополнить низ карточки
+note over v,s
+P01: от возникновения ситуации до видимой / слышимой тревоги ≤ 5 с.
+Окно 60 с не ожидание. Бюджет требует испытания.
+end note
+
+legend right
+|= Обозначения |
+| UML: классы / состояния / участники подписаны |
+| Стрелка: вызов, зависимость или переход по подписи |
+endlegend
+@enduml

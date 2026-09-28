@@ -1,0 +1,47 @@
+@startuml
+!define RELATIVE_INCLUDE true
+!include ../../diagrams/vendor/c4-plantuml/C4_Container.puml
+LAYOUT_LEFT_RIGHT()
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam nodesep 30
+skinparam ranksep 55
+show stereotype
+title AgroTech X — C2, ферма / вариант Б
+
+Person(duty, "Дежурный", "Сотрудник смены")
+System_Ext(cam, "IP-камеры", "Видео зон фермы")
+System_Ext(sound, "Локальная сигнализация", "Параллельный канал тревоги")
+System(center, "Центр AgroTech X", "Другая часть AgroTech;\nMM2 и отчёты, см. C2 центра")
+System_Boundary(farm, "Локальная часть AgroTech X") {
+  Container(video, "Видеоаналитика", "C# / ML SDK", "Захват, распознавание, прямая доставка;\nлокальный буфер повторов")
+  Container(ui, "Терминал фермы", "Blazor WASM / .NET агент", "Немедленные тревоги, группировка,\nкарточки и команды сотрудника")
+  Container(api, "Локальный API", "C# / ASP.NET Core", "Проверяет токен, tenant и локальные права;\nмаршрутизирует доменные команды")
+  Container(app, "Сервис инцидентов", "C# / .NET", "Жизненный цикл инцидента,\nответственный и сроки реакции")
+  ContainerDb(bus, "Локальный журнал Kafka", "Apache Kafka", "История фактов; доставка потребителям")
+  ContainerDb(read, "Локальные проекции", "PostgreSQL", "Карточки, справочники, учёт;\nпроизводное состояние")
+  Container(sync, "Агент политик и медиа", "C# / .NET Worker", "Принимает политики, передаёт медиа")
+}
+Rel_R(cam, video, "Видео", "RTSP / ЛВС")
+Rel_R(video, ui, "Срочная тревога\nс ID", "HTTPS / mTLS")
+Rel_D(video, sound, "Сигнал с ID", "Локальный адаптер")
+Rel_D(video, bus, "Наблюдения", "Kafka / TLS")
+Rel_D(duty, ui, "Читает, принимает, закрывает", "Локальный UI")
+Rel_D(ui, api, "Команды дежурного", "HTTPS")
+Rel_L(api, app, "Проверенная команда инциденту", "HTTPS / mTLS")
+Rel_L(app, bus, "Читает и пишет факты", "Kafka / TLS")
+Rel_D(app, read, "Восстанавливает и читает проекции", "SQL")
+Rel_U(app, ui, "Уточняет карточку", "SSE / HTTPS")
+Rel_U(sync, api, "Политики, ИИ, намерения", "HTTPS / mTLS")
+Rel_L(sync, center, "Медиа вверх; модели вниз", "HTTPS")
+Rel_R(bus, sync, "Версии политик и рекомендаций", "Kafka / TLS")
+
+Rel_U(center, bus, "Читает факты; пишет политики", "Kafka / mTLS")
+
+legend right
+|<#FFFFFF><color:#333333> Обозначения |
+|<#438DD5><color:white> Контейнер AgroTech |
+|<#1168BD><color:white> Другая часть AgroTech |
+|<#999999><color:white> Внешняя система |
+endlegend
+@enduml

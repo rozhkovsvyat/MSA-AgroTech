@@ -1,0 +1,32 @@
+@startuml
+!define RELATIVE_INCLUDE true
+!include ../../diagrams/vendor/c4-plantuml/C4_Container.puml
+LAYOUT_LANDSCAPE()
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam nodesep 50
+skinparam ranksep 100
+show stereotype
+title AgroTech X — C2, локальная эскалация (А и Б)
+
+System_Ext(mobile, "Мобильные получатели (AS-IS)", "Flutter-клиенты с поддержкой WSS по ЛВС")
+System_Boundary(farm, "Локальная часть AgroTech X") {
+Container(video, "Видеоаналитика", "C# / ML SDK", "Первичное обнаружение")
+Container(terminal, "Терминал фермы", "Blazor WASM / .NET агент", "Прямые тревоги и локальная эскалация;\nсостояние принятия и повтор доставки")
+
+}
+Person(reserve, "Резервный дежурный / руководитель", "Получает эскалацию при доступном устройстве")
+System_Ext(sound, "Локальная сигнализация", "Первичная тревога и повторный звук")
+Rel_R(video, terminal, "Первый сигнал немедленно", "HTTPS / mTLS")
+Rel_R(terminal, mobile, "Срок истёк без принятия: уведомление", "WSS / ЛВС")
+Rel_R(mobile, reserve, "Показывает тревогу", "UI")
+Rel_D(video, sound, "Независимый первичный сигнал", "Локальный адаптер")
+Rel_D(terminal, sound, "Повторная сигнализация по таймеру", "Локальный адаптер")
+legend right
+|<#438DD5><color:white> Контейнер AgroTech |
+|<#999999><color:white> Внешняя система |
+|<#FFFFFF><color:#333333> Без WAN адресат вне ЛВС недоступен |
+|<#FFFFFF><color:#333333> При отказе терминала таймер деградирует |
+endlegend
+
+@enduml

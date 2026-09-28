@@ -1,0 +1,97 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam shadowing false
+skinparam classBackgroundColor #85BBF0
+skinparam classBorderColor #1168BD
+skinparam ArrowColor #555555
+skinparam nodesep 45
+skinparam ranksep 70
+hide empty members
+title AgroTech X — C4, Издатель наблюдений / вариант А
+
+top to bottom direction
+class Observation <<value object>> {
+ +ObservationId: Guid
+ +TenantId: string
+ +FarmId: string
+ +SchemaVersion: int
+ +CameraId: string
+ +ZoneId: string
+ +OccurredAt: DateTimeOffset
+ +ProducerId: string
+ +ModelVersion: string
+ +Severity: Severity
+ +Evidence: IReadOnlyList<EvidenceRef>
+}
+class ObservationPublisher <<component>> {
+ +PublishAsync(detection: Detection): Task<Guid>
+}
+interface AlertPort <<port to delivery>> {
+ +SendAsync(observation: Observation, destination: Destination): Task<DeliveryReceipt>
+}
+interface OutboxPort <<port to spool>> {
+ +AppendAsync(observation: Observation, destinations: IReadOnlyList<Destination>): Task
+ +GetPendingAsync(): Task<IReadOnlyList<DeliveryJob>>
+ +MarkAcknowledgedAsync(jobId: Guid, receipt: DeliveryReceipt): Task
+}
+interface EventSink <<port of publication>> {
+ +AppendAsync(observation: Observation): Task<AppendReceipt>
+}
+class PostgresEventSink {
+  +AppendAsync(observation: Observation): Task<AppendReceipt>
+}
+class DeliveryJob {
+ +JobId: Guid
+ +Destination: Destination
+ +ObservationId: Guid
+ +State: DeliveryState
+}
+class DeliveryReceipt {
+ +ReceiverId: string
+ +ObservationId: Guid
+ +ConfirmedAt: DateTimeOffset
+}
+ObservationPublisher --> Observation : создаёт ID один раз
+ObservationPublisher --> AlertPort : немедленный вызов
+ObservationPublisher --> OutboxPort : независимо сохраняет
+OutboxPort --> DeliveryJob : хранит
+DeliveryJob --> Observation : ссылается
+AlertPort --> DeliveryReceipt : возвращает
+EventSink <|.. PostgresEventSink
+class PublicationWorker <<external collaborator>> {
+ +FlushPendingAsync(): Task
+}
+PublicationWorker --> OutboxPort : читает задания / фиксирует ACK
+PublicationWorker --> EventSink : публикует факт
+note bottom of PublicationWorker
+Сотрудничающий класс компонента
+«Публикация фактов» из C3.
+DeliveryJob — данные, а не исполнитель.
+end note
+note bottom of ObservationPublisher
+Отправка тревоги не ждёт ack журнала.
+При отказе буфера сохраняется best effort доставка,
+но история / повтор после перезапуска не гарантируются.
+Разные ProducerId — не независимые доказательства опасности.
+end note
+
+note right of Observation
+Типы C#/.NET: Guid, DateTimeOffset, Task<T>.
+Detection — входное обнаружение (камера, зона, время,
+серьёзность, ссылки на доказательства).
+Severity: enum {urgent, normal}.
+Destination: enum {terminal, siren, event_log}.
+DeliveryState: enum {pending, acked, unknown}.
+EvidenceRef: value object {uri: string, sha256: string}.
+AppendReceipt: value object {EventId: Guid,
+position: string, ConfirmedAt: DateTimeOffset}.
+JSON-имена полей задаются контрактом интеграций.
+end note
+
+legend right
+|= Обозначения |
+| UML: классы / состояния / участники подписаны |
+| Стрелка: вызов, зависимость или переход по подписи |
+endlegend
+@enduml

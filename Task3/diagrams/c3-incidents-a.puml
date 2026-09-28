@@ -1,0 +1,37 @@
+@startuml
+!define RELATIVE_INCLUDE true
+!include ../../diagrams/vendor/c4-plantuml/C4_Component.puml
+LAYOUT_LEFT_RIGHT()
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam nodesep 35
+skinparam ranksep 65
+show stereotype
+title AgroTech X — C3, Приложение фермы / вариант А
+Container_Ext(ui, "Терминал фермы", "Blazor / .NET агент", "Карточки и действия дежурного")
+ContainerDb_Ext(db, "Журнал и outbox", "PostgreSQL", "Факты инцидента, версия и задания")
+ContainerDb_Ext(proj, "Локальные проекции", "PostgreSQL", "Карточки и учёт")
+Container_Ext(gateway, "Шлюз оборудования", "C# / SDK", "Физическое исполнение")
+Container_Boundary(app, "Приложение фермы — контейнер C2") {
+ Component(api, "API и локальные права", "ASP.NET Core", "Проверяет пользователя и срок прав")
+ Component(incident, "Модуль инцидентов", "C#", "Группировка 60 с, ответственный, исход")
+ Component(repo, "Транзакционный репозиторий", "C# / Npgsql", "ExpectedVersion; факт и outbox атомарно")
+ Component(control, "Модуль оборудования", "C#", "Лимит, срок и окончательный допуск")
+ Component(account, "Учёт и проекции", "C#", "Поголовье, остатки, карточки")
+}
+Rel(ui, api, "Запрос / команда", "HTTPS")
+Rel(api, incident, "Проверенная команда", "In-process")
+Rel(api, control, "Команда оборудованию", "In-process")
+Rel(incident, repo, "Проверка версии и запись", "In-process")
+Rel(control, repo, "Устойчивый допуск", "In-process")
+Rel(repo, db, "Читает наблюдения;\nпишет факты и outbox", "SQL transaction")
+Rel(account, db, "Читает факты по позиции", "SQL")
+Rel(account, proj, "Обновляет представления", "SQL")
+Rel(control, gateway, "ID, срок, epoch после допуска", "HTTPS / mTLS")
+Rel(incident, ui, "Результат и карточка", "SSE / HTTPS")
+legend right
+|<#FFFFFF><color:#333333> Обозначения |
+|<#85BBF0><color:#333333> Компонент раскрываемого контейнера |
+|<#999999><color:white> Соседний контейнер |
+endlegend
+@enduml

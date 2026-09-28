@@ -1,0 +1,6 @@
+{
+  "ADR/001-architecture-variants.md": "Task1/adr-variants.md",
+  "ADR/004-saas-isolation.md": "Task5/adr-saas.md",
+  "ADR/005-architecture-choice.md": "Task4/comparison.md",
+  "ADR/006-integrations.md": "Task2/adr-integrations.md"
+}

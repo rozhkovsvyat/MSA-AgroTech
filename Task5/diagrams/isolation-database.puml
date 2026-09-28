@@ -1,0 +1,32 @@
+@startuml
+!define RELATIVE_INCLUDE true
+!include ../../diagrams/vendor/c4-plantuml/C4_Container.puml
+LAYOUT_LANDSCAPE()
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam nodesep 50
+skinparam ranksep 100
+show stereotype
+title AgroTech SaaS — C2, модель изоляции
+
+Person(a, "Сотрудник компании А", "Пользователь tenant А")
+Person(b, "Сотрудник компании Б", "Пользователь tenant Б")
+System_Boundary(saas, "AgroTech SaaS — БД на клиента (выбрано)") {
+Container(app, "Общее приложение", "C# / ASP.NET Core", "Проверяет tenant и права;\nвыбирает подключение из реестра")
+ContainerDb(dba, "БД А", "PostgreSQL", "Отдельная роль и резервная копия")
+ContainerDb(dbb, "БД Б", "PostgreSQL", "Независимый перенос БД")
+}
+Rel_R(app, dba, "Tenant А / роль А", "SQL")
+Rel_R(app, dbb, "Tenant Б / роль Б", "SQL")
+Lay_D(dba, dbb)
+Rel_R(a, app, "Запрос + token А", "HTTPS")
+Rel_R(b, app, "Запрос + token Б", "HTTPS")
+Lay_D(a, b)
+
+legend right
+|<#FFFFFF><color:#333333> Обозначения |
+|<#438DD5><color:white> Контейнер AgroTech |
+|<#1168BD><color:white> Другая часть AgroTech |
+|<#999999><color:white> Внешняя система |
+endlegend
+@enduml

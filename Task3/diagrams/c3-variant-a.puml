@@ -1,0 +1,41 @@
+@startuml
+!define RELATIVE_INCLUDE true
+!include ../../diagrams/vendor/c4-plantuml/C4_Component.puml
+LAYOUT_LANDSCAPE()
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam nodesep 50
+skinparam ranksep 65
+show stereotype
+title AgroTech X — C3, Видеоаналитика / вариант А
+
+System_Ext(camera, "IP-камера", "Видео и идентификатор камеры")
+Container_Ext(ui, "Терминал фермы", "Blazor WASM / .NET агент", "Группировка прямых тревог")
+System_Ext(sound, "Локальная сигнализация", "Второй получатель")
+ContainerDb_Ext(journal, "Журнал и outbox", "PostgreSQL", "Факты и потребители")
+Container_Boundary(video, "Видеоаналитика — один контейнер C2") {
+ Component(capture, "Захват потока", "GStreamer / RTSP", "Переподключение, кадры, camera_id")
+ Component(infer, "Адаптер модели", "C# / ML SDK", "Подготовка кадров; версия модели")
+ Component(build, "Издатель наблюдений", "C# / .NET", "Постоянный observation_id,\nзона, время и признаки опасности")
+ Component(delivery, "Доставка тревоги", "C# / HttpClient", "Независимые попытки двум получателям;\nпервое обнаружение без голосования")
+ Component(spool, "Устойчивый буфер", "SQLite / WAL", "Задания повторов и подтверждения\nпо каждому назначению")
+ Component(publisher, "Публикация фактов", "PostgreSQL client", "Догоняет журнал; подтверждает позицию")
+}
+Rel_R(camera, capture, "Видеопоток", "RTSP")
+Rel_D(capture, infer, "Кадры и timestamps", "In-process")
+Rel_R(infer, build, "Обнаружение", "In-process")
+Rel_R(build, delivery, "Срочное наблюдение немедленно", "In-process")
+Rel_D(build, spool, "Сохраняет факт и задания", "SQLite transaction")
+Rel_R(delivery, ui, "Тревога + ID", "HTTPS / mTLS")
+Rel_R(delivery, sound, "Сигнал + ID", "Локальный адаптер")
+Rel_D(delivery, spool, "Результаты; незавершённые повторы", "SQL")
+Rel_U(publisher, spool, "Читает незавершённые задания", "SQL")
+Rel_R(publisher, journal, "Наблюдение / результат доставки", "SQL transaction")
+Lay_D(ui, sound)
+
+legend right
+|<#FFFFFF><color:#333333> Обозначения |
+|<#85BBF0><color:#333333> Компонент выбранного контейнера |
+|<#999999><color:white> Соседний контейнер / внешняя система |
+endlegend
+@enduml

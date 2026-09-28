@@ -1,0 +1,49 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam shadowing false
+skinparam classBackgroundColor #85BBF0
+skinparam classBorderColor #1168BD
+skinparam ArrowColor #555555
+skinparam nodesep 45
+skinparam ranksep 70
+hide empty members
+title AgroTech X — размещение / вариант Б
+
+left to right direction
+node "ЛВС камер\n16 камер (допущение)" as cams
+node "Пул edge: E1, E2, E3, E4, E5" as pool {
+ artifact "Видеоаналитика: 48 обработок / 50 слотов" as video
+ artifact "Локальные API и обработчики доменов" as app
+ database "Kafka: 5 брокеров / 5 контроллеров" as log
+}
+node "Терминал\nс локальным агентом" as term
+node "Сигнализация\nотдельное питание / канал" as sound
+cloud "Центр AgroTech X\nMM2 / медиасервис / SaaS" as center
+cams --> video : RTSP / проводная PoE-ЛВС
+video -down-> term : прямая тревога / HTTPS
+video -right-> sound : локальный адаптер
+video --> log : запись фактов
+app -down-> term : карточки / HTTPS
+center --> log : MM2 читает факты / пишет политики
+note bottom of pool
+Тройки исполнителей распределены по разным узлам.
+API: E1/E3/E5; инциденты: E1/E2/E3 (consumer group).
+Проекции: E1, восстанавливаются на выжившем узле.
+Шлюз оборудования: E2, резерв E4/E5 с fencing.
+Буфер, доставка и адаптер сирены — на каждом edge.
+Агент политик/медиа: E1/E3/E5 с позицией по разделам.
+Назначения выпускает контроллер развёртывания в центре;
+на ферме действуют кэшированные подписанные версии.
+10 потоков — ёмкость после резерва CPU/RAM/IO
+для Kafka и доменных процессов, а не весь ресурс.
+Мобильный получатель: управляемое устройство дежурного,
+WSS к терминалу по ЛВС; работа в фоне проверяется на пилоте.
+end note
+
+legend right
+|= Обозначения |
+| Узел — устройство; artifact — развёрнутый процесс |
+| Связь — сетевое / локальное взаимодействие |
+endlegend
+@enduml
