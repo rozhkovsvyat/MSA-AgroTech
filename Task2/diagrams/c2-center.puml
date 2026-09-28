@@ -33,8 +33,9 @@ Rel_R(project, erp, "Справочники и агрегаты", "HTTPS / API")
 
 legend right
 |<#FFFFFF><color:#333333> Обозначения |
-|<#438DD5><color:white> Контейнер AgroTech |
-|<#1168BD><color:white> Другая часть AgroTech |
+|<#08427B><color:white> Пользователь |
+|<#438DD5><color:white> Контейнер |
+|<#1168BD><color:white> Программная система |
 |<#999999><color:white> Внешняя система |
 endlegend
 @enduml

@@ -8,7 +8,7 @@ skinparam nodesep 35
 skinparam ranksep 65
 show stereotype
 title AgroTech X — C3, Приложение фермы / вариант А
-Container_Ext(ui, "Терминал фермы", "Blazor / .NET агент", "Карточки и действия дежурного")
+Container_Ext(ui, "Терминал фермы", "React + Vite; .NET агент", "Карточки и действия дежурного")
 ContainerDb_Ext(db, "Журнал и outbox", "PostgreSQL", "Факты инцидента, версия и задания")
 ContainerDb_Ext(proj, "Локальные проекции", "PostgreSQL", "Карточки и учёт")
 Container_Ext(gateway, "Шлюз оборудования", "C# / SDK", "Физическое исполнение")
@@ -31,7 +31,7 @@ Rel(control, gateway, "ID, срок, epoch после допуска", "HTTPS / 
 Rel(incident, ui, "Результат и карточка", "SSE / HTTPS")
 legend right
 |<#FFFFFF><color:#333333> Обозначения |
-|<#85BBF0><color:#333333> Компонент раскрываемого контейнера |
-|<#999999><color:white> Соседний контейнер |
+|<#85BBF0><color:#333333> Компонент |
+|<#B3B3B3><color:white> Соседний контейнер |
 endlegend
 @enduml

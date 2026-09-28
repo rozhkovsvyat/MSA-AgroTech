@@ -15,7 +15,7 @@ System_Ext(sound, "Локальная сигнализация", "Паралле
 System(center, "Центр AgroTech X", "Отчёты, политики, рекомендации")
 System_Boundary(farm, "Локальная часть AgroTech X") {
   Container(video, "Видеоаналитика", "C# / ML SDK", "Захват, распознавание, прямая доставка;\nлокальный буфер повторов")
-  Container(ui, "Терминал фермы", "Blazor WASM / .NET агент", "Немедленные тревоги, группировка,\nкарточки и команды сотрудника")
+  Container(ui, "Терминал фермы", "React + Vite; .NET агент", "Немедленные тревоги, группировка,\nкарточки и команды сотрудника")
   Container(app, "Приложение фермы", "C# / .NET", "Инциденты, ответственность, сроки;\nпроверка прав и команд")
   ContainerDb(bus, "Журнал и outbox", "PostgreSQL", "История фактов; доставка потребителям")
   ContainerDb(read, "Локальные проекции", "PostgreSQL", "Карточки, справочники, учёт;\nпроизводное состояние")
@@ -39,8 +39,9 @@ Lay_D(ui, sound)
 
 legend right
 |<#FFFFFF><color:#333333> Обозначения |
-|<#438DD5><color:white> Контейнер AgroTech |
-|<#1168BD><color:white> Другая часть AgroTech |
+|<#08427B><color:white> Пользователь |
+|<#438DD5><color:white> Контейнер |
+|<#1168BD><color:white> Программная система |
 |<#999999><color:white> Внешняя система |
 endlegend
 @enduml

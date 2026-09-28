@@ -1,6 +1,6 @@
 # Доменные контексты и контейнеры
 
-[DDD](ddd-contexts.md) → [C2](architecture.md) → [контракты](integrations.md) → [ADR 006](../ADR/006-integrations.md) → [риски](risks.md).
+[ADR 006](../ADR/006-integrations.md) — контексты, интеграции, C2 и риски. [Таблица контрактов](integrations.md) содержит протоколы и правила доставки.
 
 | Требование | Конкретный артефакт |
 |---|---|

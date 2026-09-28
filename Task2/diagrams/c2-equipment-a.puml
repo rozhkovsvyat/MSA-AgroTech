@@ -14,7 +14,7 @@ System_Ext(device, "Оборудование", "Корм, вода, фильтр
 System(center, "Центр AgroTech X", "Намерения и справочники")
 System_Boundary(farm, "Локальная часть AgroTech X / вариант А") {
  Container(sync, "Синхронизация", "C# / .NET Worker", "Outbox вверх, намерения и политики вниз")
- Container(ui, "Терминал фермы", "Blazor WASM / .NET агент", "Команды и фактический исход")
+ Container(ui, "Терминал фермы", "React + Vite; .NET агент", "Команды и фактический исход")
  Container(app, "Приложение фермы", "C# / .NET", "Модули прав, допуска, инцидентов,\nучёта и метрик в одном процессе")
  Container(adapter, "Шлюз оборудования", "C# / SDK устройств", "Дедупликация, epoch, опрос результата")
  ContainerDb(journal, "Журнал и outbox", "PostgreSQL", "Допуски, команды, исходы и учёт")
@@ -34,8 +34,9 @@ Rel(journal, sync, "Факты из outbox по позиции", "SQL")
 
 legend right
 |<#FFFFFF><color:#333333> Обозначения |
-|<#438DD5><color:white> Контейнер AgroTech |
-|<#1168BD><color:white> Другая часть AgroTech |
+|<#08427B><color:white> Пользователь |
+|<#438DD5><color:white> Контейнер |
+|<#1168BD><color:white> Программная система |
 |<#999999><color:white> Внешняя система |
 endlegend
 @enduml

@@ -13,7 +13,7 @@ Person(duty, "Дежурный", "Сотрудник смены")
 Person(manager, "Сотрудник AgroTech X", "Ответственный за хозяйство")
 System_Ext(cab, "Кабинеты сотрудников (AS-IS)", "Существующие web / mobile-клиенты AgroTech")
 System_Boundary(local, "Фермы AgroTech X — повторяемая локальная часть") {
- Container(ui, "Терминалы ферм", "Blazor WASM / .NET агент", "Тревоги без WAN")
+ Container(ui, "Терминалы ферм", "React + Vite; .NET агент", "Тревоги без WAN")
  Container(video, "Видеоаналитика", "C# / ML SDK", "Распознавание и прямая тревога")
  ContainerDb(farm, "Журналы ферм 1…N", "Apache Kafka", "Отдельный автономный кластер на ферму")
 }
@@ -38,8 +38,8 @@ Rel_R(api, db, "Подключение AgroTech X", "SQL")
 
 legend right
 |<#FFFFFF><color:#333333> Обозначения |
-|<#438DD5><color:white> Контейнер AgroTech |
-|<#1168BD><color:white> Другая часть AgroTech |
+|<#08427B><color:white> Пользователь |
+|<#438DD5><color:white> Контейнер |
 |<#999999><color:white> Внешняя система |
 endlegend
 @enduml

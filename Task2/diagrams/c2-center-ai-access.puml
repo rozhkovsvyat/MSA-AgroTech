@@ -32,9 +32,8 @@ Rel(ml, media, "Публикует подписанную версию", "HTTPS 
 
 legend right
 |<#FFFFFF><color:#333333> Обозначения |
-|<#438DD5><color:white> Контейнер AgroTech |
-|<#1168BD><color:white> Другая часть AgroTech |
+|<#438DD5><color:white> Контейнер |
+|<#1168BD><color:white> Программная система |
 |<#999999><color:white> Внешняя система |
-|<#666666><color:white> Внешний участник |
 endlegend
 @enduml

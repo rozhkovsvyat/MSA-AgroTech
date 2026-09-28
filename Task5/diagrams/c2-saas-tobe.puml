@@ -13,7 +13,7 @@ Person(user, "Клиент / разработчик", "Представител�
 System_Ext(idp, "Провайдер идентификации", "OIDC / JWKS")
 System_Ext(pay, "ЮKassa", "Платежи и уведомления")
 System_Boundary(saas, "AgroTech SaaS — общий центральный контур") {
- Container(portal, "Панель самообслуживания", "Blazor WebAssembly", "Фермы, пользователи, тариф, использование")
+ Container(portal, "Панель самообслуживания", "React + Vite", "Фермы, пользователи, тариф, использование")
  Container(devportal, "Dev-портал", "Static HTML / OpenAPI", "Документация, scope, sandbox")
  Container(api, "Публичный API", "C# / ASP.NET Core", "JWT, tenant, scope, квоты;\nбиблиотека маршрутизации БД")
  Container(provision, "Управление клиентами", "C# / .NET Worker", "Реестр tenant, provisioning,\nмиграции и безопасное удаление")
@@ -45,8 +45,8 @@ Rel_D(api, billing, "Тариф и статус подписки", "HTTPS")
 
 legend right
 |<#FFFFFF><color:#333333> Обозначения |
-|<#438DD5><color:white> Контейнер AgroTech |
-|<#1168BD><color:white> Другая часть AgroTech |
+|<#08427B><color:white> Пользователь |
+|<#438DD5><color:white> Контейнер |
 |<#999999><color:white> Внешняя система |
 endlegend
 @enduml

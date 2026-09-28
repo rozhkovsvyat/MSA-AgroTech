@@ -50,9 +50,9 @@ end note
 
 legend right
 |<#FFFFFF><color:#333333> Обозначения |
-|<#08427B><color:white> Пользователь системы |
-|<#1168BD><color:white> Проектируемая система |
-|<#999999><color:white> Внешняя система |
+|<#08427B><color:white> Пользователь |
 |<#686868><color:white> Внешний участник |
+|<#1168BD><color:white> Программная система |
+|<#999999><color:white> Внешняя система |
 endlegend
 @enduml

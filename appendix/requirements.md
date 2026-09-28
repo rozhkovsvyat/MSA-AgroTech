@@ -1,6 +1,6 @@
 # AgroTech X — матрица требований и приёмки
 
-Источник: [полное задание курса](https://practicum.yandex.ru/learn/microservice-architecture/courses/c116d4da-efaa-499d-80e5-59f9f644a2dc/sprints/1023015/topics/ba18586d-5938-4902-9237-d0d516dd372f/lessons/6ce6968f-4bf2-45b3-b35a-f88ea15e9c78/), сохранённый разбор от 24.09.2026. ID введены для трассировки. Архитектурные решения согласованы; редакция пакета проходит итоговое ревью.
+Источник: [полное задание курса](https://practicum.yandex.ru/learn/microservice-architecture/courses/c116d4da-efaa-499d-80e5-59f9f644a2dc/sprints/1023015/topics/ba18586d-5938-4902-9237-d0d516dd372f/lessons/6ce6968f-4bf2-45b3-b35a-f88ea15e9c78/), сохранённый разбор от 24.09.2026. ID введены для трассировки.
 
 ## Бизнес и ограничения
 

@@ -22,8 +22,7 @@ Lay_D(a, b)
 
 legend right
 |<#FFFFFF><color:#333333> Обозначения |
-|<#438DD5><color:white> Контейнер AgroTech |
-|<#1168BD><color:white> Другая часть AgroTech |
-|<#999999><color:white> Внешняя система |
+|<#08427B><color:white> Пользователь |
+|<#438DD5><color:white> Контейнер |
 endlegend
 @enduml

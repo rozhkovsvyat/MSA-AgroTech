@@ -10,7 +10,7 @@ show stereotype
 title AgroTech X — C3, Видеоаналитика / вариант Б
 
 System_Ext(camera, "IP-камера", "Видео и идентификатор камеры")
-Container_Ext(ui, "Терминал фермы", "Blazor WASM / .NET агент", "Группировка прямых тревог")
+Container_Ext(ui, "Терминал фермы", "React + Vite; .NET агент", "Группировка прямых тревог")
 System_Ext(sound, "Локальная сигнализация", "Второй получатель")
 ContainerDb_Ext(journal, "Локальный журнал Kafka", "Apache Kafka", "Факты и потребители")
 Container_Boundary(video, "Видеоаналитика — один контейнер C2") {
@@ -35,7 +35,8 @@ Lay_D(ui, sound)
 
 legend right
 |<#FFFFFF><color:#333333> Обозначения |
-|<#85BBF0><color:#333333> Компонент выбранного контейнера |
-|<#999999><color:white> Соседний контейнер / внешняя система |
+|<#85BBF0><color:#333333> Компонент |
+|<#B3B3B3><color:white> Соседний контейнер |
+|<#999999><color:white> Внешняя система |
 endlegend
 @enduml

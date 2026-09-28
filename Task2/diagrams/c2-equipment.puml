@@ -13,7 +13,7 @@ Person(user, "Уполномоченный сотрудник", "Сотрудн�
 System_Ext(device, "Оборудование", "Корм, вода, фильтры")
 System_Boundary(farm, "Локальная часть AgroTech X") {
  Container(policy, "Агент политик и медиа", "C# / .NET", "Читает локальный топик намерений;\nданные пришли через MM2")
- Container(ui, "Терминал фермы", "Blazor WASM / .NET агент", "Команды и фактический исход")
+ Container(ui, "Терминал фермы", "React + Vite; .NET агент", "Команды и фактический исход")
  Container(api, "Локальный API", "C# / ASP.NET Core", "Проверяет пользователя, ферму и права")
  Container(control, "Управление оборудованием", "C# / .NET", "Окончательный допуск, лимиты,\nсрок и неизвестный исход")
  Container(adapter, "Шлюз оборудования", "C# / SDK устройств", "Проверяет epoch и command_id;\nдедупликация и опрос исполнителя")
@@ -35,8 +35,8 @@ Rel_D(api, proj, "Читает состояние с отметкой свеже
 
 legend right
 |<#FFFFFF><color:#333333> Обозначения |
-|<#438DD5><color:white> Контейнер AgroTech |
-|<#1168BD><color:white> Другая часть AgroTech |
+|<#08427B><color:white> Пользователь |
+|<#438DD5><color:white> Контейнер |
 |<#999999><color:white> Внешняя система |
 endlegend
 @enduml

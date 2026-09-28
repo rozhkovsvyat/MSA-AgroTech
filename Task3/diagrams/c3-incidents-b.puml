@@ -9,7 +9,7 @@ skinparam ranksep 65
 show stereotype
 title AgroTech X — C3, Сервис инцидентов / вариант Б
 Container_Ext(api, "Локальный API", "ASP.NET Core", "Проверенные команды дежурного")
-Container_Ext(ui, "Терминал фермы", "Blazor / .NET агент", "Прямые тревоги и карточки")
+Container_Ext(ui, "Терминал фермы", "React + Vite; .NET агент", "Прямые тревоги и карточки")
 ContainerDb_Ext(bus, "Локальный журнал Kafka", "Apache Kafka", "Входные наблюдения / команды; факты")
 ContainerDb_Ext(proj, "Локальные проекции", "PostgreSQL", "Восстанавливаемое состояние")
 Container_Boundary(svc, "Сервис инцидентов — контейнер C2") {
@@ -30,7 +30,7 @@ Rel(project, proj, "Версия карточки", "SQL / idempotency")
 Rel(project, ui, "Канонический ID и подрепорты", "SSE / HTTPS")
 legend right
 |<#FFFFFF><color:#333333> Обозначения |
-|<#85BBF0><color:#333333> Компонент раскрываемого контейнера |
-|<#999999><color:white> Соседний контейнер |
+|<#85BBF0><color:#333333> Компонент |
+|<#B3B3B3><color:white> Соседний контейнер |
 endlegend
 @enduml
