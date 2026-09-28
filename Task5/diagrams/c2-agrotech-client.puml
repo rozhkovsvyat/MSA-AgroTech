@@ -13,9 +13,10 @@ Person(duty, "Дежурный", "Сотрудник смены")
 Person(manager, "Сотрудник AgroTech X", "Ответственный за хозяйство")
 System_Ext(cab, "Кабинеты сотрудников (AS-IS)", "Существующие web / mobile-клиенты AgroTech")
 System_Boundary(local, "Фермы AgroTech X — повторяемая локальная часть") {
+ Container(notify, "Оповещение ферм", "C# / .NET Worker", "Доставка терминалу и сирене")
  Container(ui, "Терминалы ферм", "React + Vite; .NET агент", "Тревоги без WAN")
- Container(video, "Видеоаналитика", "C# / ML SDK", "Распознавание и прямая тревога")
- ContainerDb(farm, "Журналы ферм 1…N", "Apache Kafka", "Отдельный автономный кластер на ферму")
+ Container(video, "Видеоаналитика", "C# / ML SDK", "Распознавание и публикация наблюдений")
+ ContainerDb(farm, "Журналы ферм 1…N", "Apache Kafka", "Кластер на ферму; RF=5 / minISR=3")
 }
 System_Boundary(cloud, "AgroTech SaaS — общий центр") {
  Container(sync, "Шлюз синхронизации", "MirrorMaker 2", "Однонаправленные allowlist топики")
@@ -26,7 +27,8 @@ System_Boundary(cloud, "AgroTech SaaS — общий центр") {
  Container(api, "Центральный API", "C# / .NET", "Tenant и права; маршрутизация БД")
 }
 Rel_R(duty, ui, "Реагирует", "UI / ЛВС")
-Rel_R(video, ui, "Тревога немедленно", "HTTPS")
+Rel_R(farm, notify, "Наблюдения", "Kafka / TLS")
+Rel_R(notify, ui, "Тревога с ID", "HTTPS")
 Rel_D(video, farm, "Наблюдения", "Kafka / TLS")
 Rel_R(farm, sync, "Факты вверх; политики вниз", "Kafka / mTLS")
 Rel_R(sync, kafka, "Репликация по allowlist", "Kafka / TLS")

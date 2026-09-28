@@ -7,21 +7,23 @@ skinparam dpi 110
 skinparam nodesep 50
 skinparam ranksep 100
 show stereotype
-title AgroTech X — C2, локальная эскалация (А и Б)
+title AgroTech X — C2, локальная эскалация / вариант Б
 
 System_Ext(mobile, "Мобильные получатели (AS-IS)", "Flutter-клиенты с поддержкой WSS по ЛВС")
 System_Boundary(farm, "Локальная часть AgroTech X") {
-Container(video, "Видеоаналитика", "C# / ML SDK", "Первичное обнаружение")
-Container(terminal, "Терминал фермы", "React + Vite; .NET агент", "Прямые тревоги и локальная эскалация;\nсостояние принятия и повтор доставки")
-
+Container(incidents, "Сервис инцидентов", "C# / .NET Worker", "Таймеры 2/5 минут; состояние из журнала")
+ContainerDb(bus, "Локальная Kafka", "Apache Kafka", "Наблюдения, принятие, эскалация; RF=5/minISR=3")
+Container(notify, "Сервис оповещения", "C# / .NET Worker", "Независимые группы получателей; повтор доставки")
+Container(terminal, "Терминал фермы", "React + Vite; .NET агент", "Карточки и состояние доставки")
 }
 Person(reserve, "Резервный дежурный / руководитель", "Получает эскалацию при доступном устройстве")
 System_Ext(sound, "Локальная сигнализация", "Первичная тревога и повторный звук")
-Rel_R(video, terminal, "Первый сигнал немедленно", "HTTPS / mTLS")
-Rel_R(terminal, mobile, "Срок истёк без принятия: уведомление", "WSS / ЛВС")
+BiRel_R(bus, incidents, "Состояние / команда эскалации", "Kafka / TLS")
+Rel_R(bus, notify, "Наблюдения / эскалации", "Kafka / TLS")
+Rel_R(notify, terminal, "Карточка / тревога", "HTTPS / mTLS")
+Rel_R(notify, mobile, "Уведомление адресату в ЛВС", "WSS / ЛВС")
 Rel_R(mobile, reserve, "Показывает тревогу", "UI")
-Rel_D(video, sound, "Независимый первичный сигнал", "Локальный адаптер")
-Rel_D(terminal, sound, "Повторная сигнализация по таймеру", "Локальный адаптер")
+Rel_D(notify, sound, "Первичный / повторный сигнал", "Локальный адаптер")
 legend right
 |<#FFFFFF><color:#333333> Обозначения |
 |<#08427B><color:white> Пользователь |

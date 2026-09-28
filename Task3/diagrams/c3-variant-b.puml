@@ -10,28 +10,20 @@ show stereotype
 title AgroTech X — C3, Видеоаналитика / вариант Б
 
 System_Ext(camera, "IP-камера", "Видео и идентификатор камеры")
-Container_Ext(ui, "Терминал фермы", "React + Vite; .NET агент", "Группировка прямых тревог")
-System_Ext(sound, "Локальная сигнализация", "Второй получатель")
-ContainerDb_Ext(journal, "Локальный журнал Kafka", "Apache Kafka", "Факты и потребители")
+ContainerDb_Ext(journal, "Локальный журнал Kafka", "Apache Kafka", "RF=5 / minISR=3; оповещение и домены")
 Container_Boundary(video, "Видеоаналитика — один контейнер C2") {
  Component(capture, "Захват потока", "GStreamer / RTSP", "Переподключение, кадры, camera_id")
  Component(infer, "Адаптер модели", "C# / ML SDK", "Подготовка кадров; версия модели")
  Component(build, "Издатель наблюдений", "C# / .NET", "Постоянный observation_id,\nзона, время и признаки опасности")
- Component(delivery, "Доставка тревоги", "C# / HttpClient", "Независимые попытки двум получателям;\nпервое обнаружение без голосования")
- Component(spool, "Устойчивый буфер", "SQLite / WAL", "Задания повторов и подтверждения\nпо каждому назначению")
- Component(publisher, "Публикация фактов", "Kafka Producer", "Догоняет журнал; подтверждает позицию")
+ Component(spool, "Устойчивый буфер", "SQLite / WAL", "Наблюдения до подтверждения Kafka")
+ Component(publisher, "Публикация фактов", "Kafka Producer", "Публикует сразу; acks=all, повтор с тем же ID")
 }
 Rel_R(camera, capture, "Видеопоток", "RTSP")
 Rel_D(capture, infer, "Кадры и timestamps", "In-process")
 Rel_R(infer, build, "Обнаружение", "In-process")
-Rel_R(build, delivery, "Срочное наблюдение немедленно", "In-process")
-Rel_D(build, spool, "Сохраняет факт и задания", "SQLite transaction")
-Rel_R(delivery, ui, "Тревога + ID", "HTTPS / mTLS")
-Rel_R(delivery, sound, "Сигнал + ID", "Локальный адаптер")
-Rel_D(delivery, spool, "Результаты; незавершённые повторы", "SQL")
-Rel_U(publisher, spool, "Читает незавершённые задания", "SQL")
-Rel_R(publisher, journal, "Наблюдение / результат доставки", "Kafka / TLS")
-Lay_D(ui, sound)
+Rel_D(build, spool, "Сохраняет наблюдение", "SQLite transaction")
+BiRel_R(spool, publisher, "Читает pending; фиксирует ACK", "SQL")
+Rel_R(publisher, journal, "ObservationRecorded с ключом зоны", "Kafka / TLS")
 
 legend right
 |<#FFFFFF><color:#333333> Обозначения |
