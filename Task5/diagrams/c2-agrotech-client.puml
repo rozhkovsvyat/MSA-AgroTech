@@ -16,7 +16,7 @@ System_Boundary(local, "Фермы AgroTech X — повторяемая лок�
  Container(notify, "Оповещение ферм", "C# / .NET Worker", "Доставка терминалу и сирене")
  Container(ui, "Терминалы ферм", "React + Vite MFE; .NET агент", "Тревоги без WAN")
  Container(video, "Видеоаналитика", "C# / ML SDK", "Распознавание и публикация наблюдений")
- ContainerDb(farm, "Журналы ферм 1…N", "Apache Kafka", "Кластер на ферму; RF=5 / minISR=3")
+ ContainerDb(farm, "Журналы ферм 1…N", "Apache Kafka", "Кластер на ферму; RF=4 / minISR=2")
 }
 System_Boundary(cloud, "AgroWatch SaaS — общий центр") {
  Container(sync, "Шлюз синхронизации", "MirrorMaker 2", "Однонаправленные allowlist топики")

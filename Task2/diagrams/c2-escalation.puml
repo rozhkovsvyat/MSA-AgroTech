@@ -12,7 +12,7 @@ title AgroWatch — C2, локальная эскалация / вариант �
 System_Ext(mobile, "Мобильные получатели (AS-IS)", "Flutter-клиенты с поддержкой WSS по ЛВС")
 System_Boundary(farm, "Локальная часть AgroWatch") {
 Container(incidents, "Сервис инцидентов", "C# / .NET Worker", "Таймеры 2/5 минут; состояние из журнала")
-ContainerDb(bus, "Локальная Kafka", "Apache Kafka", "Наблюдения, принятие, эскалация; RF=5/minISR=3")
+ContainerDb(bus, "Локальная Kafka", "Apache Kafka", "Наблюдения, принятие, эскалация; RF=4/minISR=2")
 Container(notify, "Сервис оповещения", "C# / .NET Worker", "Независимые группы получателей; повтор доставки")
 Container(terminal, "Терминал фермы", "React + Vite MFE; .NET агент", "Карточки и состояние доставки")
 }

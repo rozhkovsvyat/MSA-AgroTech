@@ -10,7 +10,7 @@ show stereotype
 title AgroWatch — C3, Видеоаналитика / вариант Б
 
 System_Ext(camera, "IP-камера", "Видео и идентификатор камеры")
-ContainerDb_Ext(journal, "Локальный журнал Kafka", "Apache Kafka", "RF=5 / minISR=3; оповещение и домены")
+ContainerDb_Ext(journal, "Локальный журнал Kafka", "Apache Kafka", "RF=4 / minISR=2; оповещение и домены")
 Container_Boundary(video, "Видеоаналитика — один контейнер C2") {
  Component(capture, "Захват потока", "GStreamer / RTSP", "Переподключение, кадры, camera_id")
  Component(infer, "Адаптер модели", "C# / ML SDK", "Подготовка кадров; версия модели")

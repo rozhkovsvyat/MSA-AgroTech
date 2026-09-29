@@ -85,22 +85,29 @@ def verify():
   lost=sum(len(set(t)-set(pair))<2 for t in triples)
   assert lost==3,(pair,lost)
   unavailable.append({'failed':pair,'nonwritable_of_10':lost})
- # Agreed RF5/minISR3: every two-device failure leaves three replicas.
+ # RF4/minISR2: every four-node placement survives every two-node failure.
  kafka_pairs=[]
- for pair in itertools.combinations(range(5),2):
-  alive=set(range(5))-set(pair)
-  assert len(alive)>=3
-  # Any acknowledged ISR of at least three retains a copy after two failures.
-  assert all(set(ack)-set(pair) for ack in itertools.combinations(range(5),3))
-  kafka_pairs.append({'failed':pair,'live_replicas':len(alive),'writable_after_recovery':True})
- # Partial ISR is a distinct precondition: not a universal availability claim.
- assert len({0,1,2}-{0,1})<3
+ for replicas in itertools.combinations(range(5),4):
+  for pair in itertools.combinations(range(5),2):
+   remaining=set(replicas)-set(pair)
+   assert len(remaining)>=2
+   assert len(set(range(5))-set(pair))>=3 # controller majority
+   kafka_pairs.append({'replicas':replicas,'failed':pair,'live_replicas':len(remaining),'writable_after_recovery':True})
+ # Distinguish policy: two ISR writes with minISR2, not minISR3.
+ assert len({0,1})>=2 and not len({0,1})>=3
+ # Partial ISR before failures can leave only one; two acknowledged copies can both be lost.
+ assert len({0,1,2}-{0,1})<2
+ assert not ({0,1}-{0,1})
+ # Colocating copies of a camera is not independent redundancy.
+ assert all(len(t)==len(set(t))==3 for t in placement)
+ colocated=list(placement);colocated[0]=(0,0,1)
+ assert not survives(colocated)
  assert 5*(30+10*10)==650 and 16*(30+10*3)==960 and 16*60/5==192
  # Adversarial link fixture must be rejected by same validator.
  import tempfile
  with tempfile.TemporaryDirectory() as d:
   q=Path(d);(q/'bad.md').write_text('[missing](absent.md)');assert check_links(q)[1]
   (q/'Case.md').write_text('target');(q/'bad.md').write_text('[wrong case](case.md)');assert check_links(q)[1]
- return {'links_checked':count,'html_targets_checked':html_targets,'relationship_labels_checked':labels_checked,'broken_or_external_local_links':errors,'diagrams':diagrams,'placement':placement,'load':load,'failure_pairs_checked':10,'negative_two_copy_case':'validator rejected corrupted placement','kafka_rf5_failure_pairs':kafka_pairs,'kafka_rf3_negative_control':unavailable,'kafka_minISR_counterexample':'detected','negative_link_case':'detected','scope':'Documents/render/arithmetic only; no production or latency test'}
+ return {'links_checked':count,'html_targets_checked':html_targets,'relationship_labels_checked':labels_checked,'broken_or_external_local_links':errors,'diagrams':diagrams,'placement':placement,'load':load,'failure_pairs_checked':10,'negative_two_copy_case':'validator rejected corrupted placement','kafka_rf4_placements_and_failure_pairs':kafka_pairs,'kafka_rf3_negative_control':unavailable,'kafka_minISR_counterexample':'detected','negative_link_case':'detected','scope':'Documents/render/arithmetic only; no production or latency test'}
 if __name__=='__main__':
  r=verify();print(json.dumps(r,ensure_ascii=False,indent=2))

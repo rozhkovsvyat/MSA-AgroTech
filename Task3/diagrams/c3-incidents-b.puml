@@ -4,8 +4,8 @@
 LAYOUT_LEFT_RIGHT()
 skinparam defaultFontName Arial
 skinparam dpi 110
-skinparam nodesep 35
-skinparam ranksep 65
+skinparam nodesep 25
+skinparam ranksep 120
 show stereotype
 title AgroWatch — C3, Сервис инцидентов / вариант Б
 Container_Ext(api, "Локальный API", "ASP.NET Core", "Проверенные команды дежурного")
@@ -13,13 +13,16 @@ Container_Ext(ui, "Терминал фермы", "React + Vite; .NET агент"
 ContainerDb_Ext(bus, "Локальный журнал Kafka", "Apache Kafka", "Входные наблюдения / команды; факты")
 ContainerDb_Ext(proj, "Локальные проекции", "PostgreSQL", "Восстанавливаемое состояние")
 Container_Boundary(svc, "Сервис инцидентов — контейнер C2") {
- Component(worker, "Обработчик раздела", "C# / Kafka client", "Consumer group; один владелец раздела")
+ Component(worker, "Обработчик раздела", "C# / Streamiz.Kafka.Net", "Consumer group; один владелец раздела")
+ Component(store, "Состояние раздела", "RocksDB / persistent volume", "Окно, карточки, ключи повторов;\nвстроено в процесс")
  Component(domain, "Агрегат инцидента", "C#", "Окно, подрепорты, версия, ответственный")
- Component(tx, "Транзакционная публикация", "C# / Kafka client", "Fencing старого producer; факты + offset")
+ Component(tx, "Транзакционная публикация", "Streamiz / Kafka transaction", "Fencing старого producer; факты + offset")
  Component(project, "Проектор карточек", "C#", "Read-committed; версия и дедупликация")
 }
 Rel(api, bus, "Команда + expected_version, ключ зоны", "Kafka / acks=all")
 Rel(bus, worker, "Команды / наблюдения", "Kafka consumer")
+Rel(worker, store, "Читает и обновляет состояние", "In-process")
+BiRel(store, bus, "Изменения / восстановление состояния", "Kafka changelog")
 Rel(worker, domain, "Восстановленное состояние и вход", "In-process")
 Rel(domain, tx, "Новые факты + версия", "In-process")
 Rel(tx, bus, "Факты и commit позиции атомарно", "Kafka transaction")
