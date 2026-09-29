@@ -15,7 +15,7 @@ System(center, "Центр AgroWatch", "Намерения и справочни
 System_Boundary(farm, "Локальная часть AgroWatch / вариант А") {
  Container(sync, "Синхронизация", "C# / .NET Worker", "Outbox вверх, намерения и политики вниз")
  Container(ui, "Терминал фермы", "React + Vite MFE; .NET агент", "Команды и фактический исход")
- Container(app, "Приложение фермы", "C# / .NET", "Модули прав, допуска, инцидентов,\nучёта и метрик в одном процессе")
+ Container(app, "Приложение фермы", "C# / .NET", "Модули прав, допуска, инцидентов,\nучёта; правила состояния фильтров")
  Container(adapter, "Шлюз оборудования", "C# / SDK устройств", "Дедупликация, epoch, опрос результата")
  ContainerDb(journal, "Журнал и outbox", "PostgreSQL", "Допуски, команды, исходы и учёт")
  ContainerDb(read, "Локальные проекции", "PostgreSQL", "Учёт и справочники")
@@ -29,6 +29,9 @@ Rel(adapter, device, "Команда / запрос исхода", "Проток
 Rel(app, journal, "Фиксирует допуск до отправки", "SQL transaction")
 Rel(adapter, app, "Телеметрия и фактический исход", "HTTPS / mTLS")
 Rel(app, read, "Обновляет и читает учёт", "SQL")
+Rel(app, ui, "Тревога по фильтрации", "HTTPS / mTLS")
+System_Ext(sound, "Локальная сигнализация", "Параллельный канал тревоги")
+Rel(app, sound, "Тревога по фильтрации", "Локальный адаптер")
 
 Rel(journal, sync, "Факты из outbox по позиции", "SQL")
 

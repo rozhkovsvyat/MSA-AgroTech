@@ -1,39 +1,41 @@
 @startuml
 !define RELATIVE_INCLUDE true
 !include ../../diagrams/vendor/c4-plantuml/C4_Container.puml
-LAYOUT_LEFT_RIGHT()
+LAYOUT_LANDSCAPE()
 skinparam defaultFontName Arial
 skinparam dpi 110
 skinparam nodesep 50
 skinparam ranksep 100
 show stereotype
-title AgroWatch — C2, доступ и асинхронный анализ
+title AgroWatch — C2 пилота, доступ и асинхронный анализ
 
 Person_Ext(ml, "Поставщик ML-модели", "Передаёт проверенную версию")
 System_Ext(idp, "Провайдер идентификации", "OIDC / JWKS")
 System(farm, "Локальная часть фермы", "Тревоги и сбор медиа")
 System_Ext(ui, "Кабинеты сотрудников (AS-IS)", "Существующие web / mobile-клиенты AgroTech")
-System_Boundary(center, "Центральная часть AgroWatch — дополнительный вид") {
+ContainerDb_Ext(events, "Центральная Kafka (AS-IS)", "Apache Kafka / платформа AgroTech X", "Выделенные топики AgroWatch")
+System_Boundary(center, "Центр AgroWatch") {
 
  Container(api, "Центральный API", "C# / ASP.NET Core", "Проверяет JWT, права и tenant;\nфиксирует рекомендацию отдельным фактом")
- ContainerDb(events, "Центральная Kafka", "Apache Kafka", "События и рекомендации")
  Container(ai, "ИИ-триаж", "C# / ML API", "Читает подрепорты, предлагает действия")
  Container(media, "Медиасервис и архив", "C# / S3 API", "Хранит доказательства и подписанные модели")
 }
-Rel(ui, idp, "Вход пользователя", "OIDC / PKCE")
-Rel(ui, api, "Запрос + access token", "HTTPS")
-Rel(api, idp, "Получает и кэширует JWKS", "HTTPS")
-Rel(api, events, "Пишет рекомендации и намерения", "Kafka / TLS")
-Rel(events, ai, "Наблюдения для анализа", "Kafka / TLS")
-Rel(ai, api, "Рекомендация / доменная команда", "HTTPS / scoped token")
-Rel(ai, media, "Получает доказательства", "HTTPS / S3")
-Rel(farm, media, "Загружает медиа; скачивает модель", "HTTPS / mTLS")
-Rel(ml, media, "Публикует подписанную версию", "HTTPS / scoped API")
+Rel_R(ui, idp, "Вход пользователя", "OIDC / PKCE")
+Rel_R(ui, api, "Запрос + access token", "HTTPS")
+Rel_R(api, idp, "Получает и кэширует JWKS", "HTTPS")
+Rel_R(api, events, "Пишет рекомендации и намерения", "Kafka / TLS")
+Rel_L(events, ai, "Наблюдения для анализа", "Kafka / TLS")
+Rel_U(ai, api, "Рекомендация / доменная команда", "HTTPS / scoped token")
+Rel_D(ai, media, "Получает доказательства", "HTTPS / S3")
+Rel_R(farm, media, "Загружает медиа; скачивает модель", "HTTPS / mTLS")
+Rel_R(ml, media, "Публикует подписанную версию", "HTTPS / scoped API")
 
 legend right
 |<#FFFFFF><color:#333333> Обозначения |
+|<#686868><color:white> Внешний пользователь |
 |<#438DD5><color:white> Контейнер |
 |<#1168BD><color:white> Программная система |
 |<#999999><color:white> Внешняя система |
+|<#B3B3B3><color:white> Внешний контейнер |
 endlegend
 @enduml

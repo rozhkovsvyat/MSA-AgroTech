@@ -18,7 +18,8 @@ cloud "Центр AgroWatch" as center
 cam --> cpu : RTSP / провод
 cpu --> term : тревога / Ethernet
 cpu -down-> sound : отдельный проводной канал
-term -down-> mobile : Wi-Fi / WSS
+term -down-> mobile : А: агент / WSS по Wi-Fi
+cpu -down-> mobile : Б: оповещение / WSS по Wi-Fi
 cpu -down-> wan : события и синхронизация
 wan --> center : VPN / основной WAN
 wan --> center : VPN / резерв LTE

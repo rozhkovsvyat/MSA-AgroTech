@@ -9,7 +9,7 @@ skinparam ranksep 100
 show stereotype
 title AgroWatch — C2, локальная эскалация / вариант Б
 
-System_Ext(mobile, "Мобильные получатели (AS-IS)", "Flutter-клиенты с поддержкой WSS по ЛВС")
+System_Ext(mobile, "Мобильные получатели (AS-IS)", "Flutter-клиенты; доработка WSS по ЛВС")
 System_Boundary(farm, "Локальная часть AgroWatch") {
 Container(incidents, "Сервис инцидентов", "C# / .NET Worker", "Таймеры 2/5 минут; состояние из журнала")
 ContainerDb(bus, "Локальная Kafka", "Apache Kafka", "Наблюдения, принятие, эскалация; RF=4/minISR=2")

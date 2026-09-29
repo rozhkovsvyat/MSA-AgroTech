@@ -7,17 +7,17 @@ skinparam dpi 110
 skinparam nodesep 50
 skinparam ranksep 55
 show stereotype
-title AgroWatch — C2, центральная часть
+title AgroWatch — C2, центральная часть пилота
 
 Person(user, "Сотрудник компании", "Ответственный за показатели ферм")
 System(farm, "AgroWatch на ферме", "Локальная Kafka / журнал, терминал")
 System_Ext(erp, "ERP и BI компании", "1С:Агро, аналитика")
 System_Ext(ui, "Кабинеты сотрудников (AS-IS)", "Существующие web / mobile-клиенты AgroTech")
+ContainerDb_Ext(kafka, "Центральная Kafka (AS-IS)", "Apache Kafka / платформа AgroTech X", "Выделенные топики и квоты AgroWatch")
 System_Boundary(center, "Центр AgroWatch") {
 
  Container(api, "Центральный API", "C# / ASP.NET Core", "Проверка токена, прав и tenant;\nмаршрутизация к БД через библиотеку")
  Container(sync, "Шлюз синхронизации", "Kafka Connect / MirrorMaker 2; HTTPS", "Копирует факты вверх; политики и ИИ вниз;\nпринимает outbox варианта А")
- ContainerDb(kafka, "Центральная Kafka", "Apache Kafka", "Факты по клиентам и фермам")
  Container(project, "Проекции и интеграции", "C# / .NET", "Учёт, прогнозы, метрики,\nполитики и обмен с ERP")
  ContainerDb(db, "БД клиентов", "PostgreSQL", "Отдельная БД на компанию")
 }
@@ -37,5 +37,6 @@ legend right
 |<#438DD5><color:white> Контейнер |
 |<#1168BD><color:white> Программная система |
 |<#999999><color:white> Внешняя система |
+|<#B3B3B3><color:white> Внешний контейнер |
 endlegend
 @enduml
