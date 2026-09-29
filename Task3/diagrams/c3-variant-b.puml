@@ -7,7 +7,7 @@ skinparam dpi 110
 skinparam nodesep 50
 skinparam ranksep 65
 show stereotype
-title AgroTech X — C3, Видеоаналитика / вариант Б
+title AgroWatch — C3, Видеоаналитика / вариант Б
 
 System_Ext(camera, "IP-камера", "Видео и идентификатор камеры")
 ContainerDb_Ext(journal, "Локальный журнал Kafka", "Apache Kafka", "RF=5 / minISR=3; оповещение и домены")

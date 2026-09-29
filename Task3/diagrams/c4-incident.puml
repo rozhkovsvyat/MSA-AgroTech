@@ -8,7 +8,7 @@ skinparam ArrowColor #555555
 skinparam nodesep 45
 skinparam ranksep 70
 hide empty members
-title AgroTech X — жизненный цикл инцидента (дополнение к C4)
+title AgroWatch — жизненный цикл инцидента (дополнение к C4)
 
 left to right direction
 state "Открыт" as Open

@@ -8,7 +8,7 @@ skinparam ArrowColor #555555
 skinparam nodesep 45
 skinparam ranksep 70
 hide empty members
-title AgroTech X — жизненный цикл команды (дополнение к C4)
+title AgroWatch — жизненный цикл команды (дополнение к C4)
 
 left to right direction
 state "Запрошена" as Requested

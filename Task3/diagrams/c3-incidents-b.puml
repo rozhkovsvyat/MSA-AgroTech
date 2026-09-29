@@ -7,7 +7,7 @@ skinparam dpi 110
 skinparam nodesep 35
 skinparam ranksep 65
 show stereotype
-title AgroTech X — C3, Сервис инцидентов / вариант Б
+title AgroWatch — C3, Сервис инцидентов / вариант Б
 Container_Ext(api, "Локальный API", "ASP.NET Core", "Проверенные команды дежурного")
 Container_Ext(ui, "Терминал фермы", "React + Vite; .NET агент", "Тревоги от оповещения и карточки")
 ContainerDb_Ext(bus, "Локальный журнал Kafka", "Apache Kafka", "Входные наблюдения / команды; факты")

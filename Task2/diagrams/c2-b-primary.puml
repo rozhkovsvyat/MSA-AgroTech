@@ -7,13 +7,13 @@ skinparam dpi 110
 skinparam nodesep 30
 skinparam ranksep 55
 show stereotype
-title AgroTech X — C2, ферма / вариант Б
+title AgroWatch — C2, ферма / вариант Б
 
 Person(duty, "Дежурный", "Сотрудник смены")
 System_Ext(cam, "IP-камеры", "Видео зон фермы")
 System_Ext(sound, "Локальная сигнализация", "Параллельный канал тревоги")
-System(center, "Центр AgroTech X", "Синхронизация истории,\nотчёты и управление фермами")
-System_Boundary(farm, "Локальная часть AgroTech X") {
+System(center, "Центр AgroWatch", "Синхронизация истории,\nотчёты и управление фермами")
+System_Boundary(farm, "Локальная часть AgroWatch") {
   Container(video, "Видеоаналитика", "C# / ML SDK", "Распознавание и публикация наблюдений;\nлокальный буфер до ACK")
   Container(notify, "Сервис оповещения", "C# / .NET Worker", "Отдельные группы терминала и сирены;\nповторы и подтверждения доставки")
   Container(ui, "Терминал фермы", "React + Vite MFE; .NET агент", "Немедленные тревоги, группировка,\nкарточки и команды сотрудника")

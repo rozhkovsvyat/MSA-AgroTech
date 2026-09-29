@@ -7,11 +7,11 @@ skinparam dpi 110
 skinparam nodesep 50
 skinparam ranksep 100
 show stereotype
-title AgroTech SaaS — C2, модель изоляции
+title AgroWatch SaaS — C2, модель изоляции
 
 Person(a, "Сотрудник компании А", "Пользователь tenant А")
 Person(b, "Сотрудник компании Б", "Пользователь tenant Б")
-System_Boundary(saas, "AgroTech SaaS — БД на клиента (выбрано)") {
+System_Boundary(saas, "AgroWatch SaaS — БД на клиента (выбрано)") {
 Container(app, "Общее приложение", "C# / ASP.NET Core", "Проверяет tenant и права;\nвыбирает подключение из реестра")
 ContainerDb(dba, "БД А", "PostgreSQL", "Отдельная роль и резервная копия")
 ContainerDb(dbb, "БД Б", "PostgreSQL", "Независимый перенос БД")

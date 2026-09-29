@@ -7,7 +7,7 @@ skinparam dpi 110
 skinparam nodesep 35
 skinparam ranksep 65
 show stereotype
-title AgroTech X — C3, Приложение фермы / вариант А
+title AgroWatch — C3, Приложение фермы / вариант А
 Container_Ext(ui, "Терминал фермы", "React + Vite; .NET агент", "Карточки и действия дежурного")
 ContainerDb_Ext(db, "Журнал и outbox", "PostgreSQL", "Факты инцидента, версия и задания")
 ContainerDb_Ext(proj, "Локальные проекции", "PostgreSQL", "Карточки и учёт")

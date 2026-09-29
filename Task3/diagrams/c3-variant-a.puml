@@ -7,7 +7,7 @@ skinparam dpi 110
 skinparam nodesep 50
 skinparam ranksep 65
 show stereotype
-title AgroTech X — C3, Видеоаналитика / вариант А
+title AgroWatch — C3, Видеоаналитика / вариант А
 
 System_Ext(camera, "IP-камера", "Видео и идентификатор камеры")
 Container_Ext(ui, "Терминал фермы", "React + Vite; .NET агент", "Группировка прямых тревог")

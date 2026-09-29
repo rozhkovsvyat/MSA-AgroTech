@@ -7,11 +7,11 @@ skinparam dpi 110
 skinparam nodesep 50
 skinparam ranksep 100
 show stereotype
-title AgroTech X — C2, управление оборудованием / вариант Б
+title AgroWatch — C2, управление оборудованием / вариант Б
 
 Person(user, "Уполномоченный сотрудник", "Сотрудник фермы с правом управления")
 System_Ext(device, "Оборудование", "Корм, вода, фильтры")
-System_Boundary(farm, "Локальная часть AgroTech X") {
+System_Boundary(farm, "Локальная часть AgroWatch") {
  Container(policy, "Агент политик и медиа", "C# / .NET", "Читает локальный топик намерений;\nданные пришли через MM2")
  Container(ui, "Терминал фермы", "React + Vite MFE; .NET агент", "Команды и фактический исход")
  Container(api, "Локальный API", "C# / ASP.NET Core", "Проверяет пользователя, ферму и права")

@@ -7,9 +7,9 @@ skinparam dpi 110
 skinparam nodesep 35
 skinparam ranksep 90
 show stereotype
-title AgroTech X — C2, микрофронтенды
+title AgroWatch — C2, микрофронтенды
 Person(user, "Сотрудник", "Роль и доступные фермы")
-System_Boundary(product, "AgroTech X — web-приложения и API") {
+System_Boundary(product, "AgroWatch — web-приложения и API") {
  Container(shell, "Оболочка", "React + Vite", "Навигация, контекст,\nзакреплённые версии модулей")
  Container(inc, "Инциденты", "React + Vite", "Карточки, подрепорты, реакция")
  Container(eq, "Оборудование", "React + Vite", "Состояние, команды, результаты")

@@ -7,12 +7,12 @@ skinparam dpi 110
 skinparam nodesep 50
 skinparam ranksep 100
 show stereotype
-title AgroTech SaaS — C2, коммерческий контур
+title AgroWatch SaaS — C2, коммерческий контур
 
 Person(user, "Клиент / разработчик", "Представитель компании-клиента")
 System_Ext(idp, "Провайдер идентификации", "OIDC / JWKS")
 System_Ext(pay, "ЮKassa", "Платежи и уведомления")
-System_Boundary(saas, "AgroTech SaaS — общий центральный контур") {
+System_Boundary(saas, "AgroWatch SaaS — общий центральный контур") {
  Container(portal, "Панель самообслуживания", "React + Vite MFE", "Оболочка и доменные модули;\nфермы, пользователи, тариф")
  Container(devportal, "Dev-портал", "Static HTML / OpenAPI", "Документация, scope, sandbox")
  Container(api, "Публичный API", "C# / ASP.NET Core", "JWT, tenant, scope, квоты;\nбиблиотека маршрутизации БД")

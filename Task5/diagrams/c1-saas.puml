@@ -7,12 +7,12 @@ skinparam dpi 110
 skinparam nodesep 50
 skinparam ranksep 100
 show stereotype
-title AgroTech SaaS — C1
+title AgroWatch SaaS — C1
 
 Person(user, "Сотрудник компании", "Представитель компании-клиента")
 Person(dev, "Разработчик клиента", "Автор интеграции компании")
 Person(duty, "Дежурный фермы", "Сотрудник смены на ферме")
-System(platform, "AgroTech SaaS", "Облачный кабинет, интеграции, биллинг;\nизолированные данные компаний")
+System(platform, "AgroWatch SaaS", "Облачный кабинет, интеграции, биллинг;\nизолированные данные компаний")
 System(farm, "Локальная система фермы", "Распознавание и тревога без интернета")
 System_Ext(iam, "Провайдер идентификации", "Вход и ключи подписи")
 System_Ext(payment, "ЮKassa", "Российская платёжная система")

@@ -4,11 +4,11 @@ skinparam dpi 130
 skinparam sequenceMessageAlign center
 skinparam maxMessageSize 250
 hide footbox
-title Доступ к AgroTech X — вход и проверка каждой операции\nДополнительная динамическая схема; не заменяет C1
+title Доступ к AgroWatch — вход и проверка каждой операции\nДополнительная динамическая схема; не заменяет C1
 actor "Пользователь" as user
-participant "Терминал / веб-интерфейс\nAgroTech X" as ui #438DD5
+participant "Терминал / веб-интерфейс\nAgroWatch" as ui #438DD5
 participant "Провайдер\nидентификации" as idp #999999
-participant "API AgroTech X\nПроверка доступа" as api #438DD5
+participant "API AgroWatch\nПроверка доступа" as api #438DD5
 participant "Доменный\nобработчик" as domain #85BBF0
 
 group Вход при доступном провайдере (OIDC Authorization Code)

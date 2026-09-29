@@ -5,7 +5,7 @@ skinparam shadowing false
 skinparam nodesep 45
 skinparam ranksep 65
 left to right direction
-title AgroTech X — сеть фермы / оба варианта
+title AgroWatch — сеть фермы / оба варианта
 node "Проводная ЛВС фермы\nEthernet / PoE, коммутаторы на UPS" as lan {
  node "IP-камеры" as cam
  node "А: сервер\nБ: пять edge" as cpu
@@ -14,7 +14,7 @@ node "Проводная ЛВС фермы\nEthernet / PoE, коммутатор
 node "Сигнализация\nотдельное питание" as sound
 node "Мобильные получатели\nдополнительный канал" as mobile
 node "WAN-маршрутизатор\nосновной провайдер + LTE" as wan
-cloud "Центр AgroTech X" as center
+cloud "Центр AgroWatch" as center
 cam --> cpu : RTSP / провод
 cpu --> term : тревога / Ethernet
 cpu -down-> sound : отдельный проводной канал

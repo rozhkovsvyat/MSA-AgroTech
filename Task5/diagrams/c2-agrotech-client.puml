@@ -18,7 +18,7 @@ System_Boundary(local, "Фермы AgroTech X — повторяемая лок�
  Container(video, "Видеоаналитика", "C# / ML SDK", "Распознавание и публикация наблюдений")
  ContainerDb(farm, "Журналы ферм 1…N", "Apache Kafka", "Кластер на ферму; RF=5 / minISR=3")
 }
-System_Boundary(cloud, "AgroTech SaaS — общий центр") {
+System_Boundary(cloud, "AgroWatch SaaS — общий центр") {
  Container(sync, "Шлюз синхронизации", "MirrorMaker 2", "Однонаправленные allowlist топики")
  ContainerDb(kafka, "Центральная Kafka", "Apache Kafka", "tenant/farm в namespace и ACL")
  Container(project, "Проекции и интеграции", "C# / .NET", "Потребитель с проверкой tenant")

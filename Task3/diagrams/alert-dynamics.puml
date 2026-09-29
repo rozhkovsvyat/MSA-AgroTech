@@ -8,7 +8,7 @@ skinparam ArrowColor #555555
 skinparam nodesep 45
 skinparam ranksep 70
 hide empty members
-title AgroTech X — вариант Б: Kafka и два канала тревоги
+title AgroWatch — вариант Б: Kafka и два канала тревоги
 hide footbox
 skinparam maxMessageSize 190
 participant "Видеоаналитика\nи локальный буфер" as v

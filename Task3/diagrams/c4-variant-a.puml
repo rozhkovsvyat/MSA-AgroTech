@@ -8,7 +8,7 @@ skinparam ArrowColor #555555
 skinparam nodesep 45
 skinparam ranksep 70
 hide empty members
-title AgroTech X — C4, Издатель наблюдений / вариант А
+title AgroWatch — C4, Издатель наблюдений / вариант А
 
 top to bottom direction
 class Observation <<value object>> {

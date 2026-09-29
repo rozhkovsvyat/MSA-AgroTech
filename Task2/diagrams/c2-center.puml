@@ -7,13 +7,13 @@ skinparam dpi 110
 skinparam nodesep 50
 skinparam ranksep 55
 show stereotype
-title AgroTech X — C2, центральная часть
+title AgroWatch — C2, центральная часть
 
 Person(user, "Сотрудник компании", "Ответственный за показатели ферм")
-System(farm, "Ферма AgroTech X", "Локальная Kafka / журнал, терминал")
+System(farm, "AgroWatch на ферме", "Локальная Kafka / журнал, терминал")
 System_Ext(erp, "ERP и BI компании", "1С:Агро, аналитика")
 System_Ext(ui, "Кабинеты сотрудников (AS-IS)", "Существующие web / mobile-клиенты AgroTech")
-System_Boundary(center, "Центр AgroTech X") {
+System_Boundary(center, "Центр AgroWatch") {
 
  Container(api, "Центральный API", "C# / ASP.NET Core", "Проверка токена, прав и tenant;\nмаршрутизация к БД через библиотеку")
  Container(sync, "Шлюз синхронизации", "Kafka Connect / MirrorMaker 2; HTTPS", "Копирует факты вверх; политики и ИИ вниз;\nпринимает outbox варианта А")

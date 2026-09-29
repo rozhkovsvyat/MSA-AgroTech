@@ -8,7 +8,7 @@ skinparam ArrowColor #555555
 skinparam nodesep 45
 skinparam ranksep 70
 hide empty members
-title AgroTech X — размещение / вариант А
+title AgroWatch — размещение / вариант А
 
 left to right direction
 node "ЛВС камер\n16 камер (допущение)" as cams
@@ -20,7 +20,7 @@ node "Единственный сервер фермы" as pool {
 }
 node "Терминал\nс локальным агентом" as term
 node "Сигнализация\nотдельное питание / канал" as sound
-cloud "Центр AgroTech X\nHTTPS gateway / медиа / SaaS" as center
+cloud "Центр AgroWatch\nHTTPS gateway / медиа / SaaS" as center
 cams --> video : RTSP / проводная PoE-ЛВС
 video -down-> term : прямая тревога / HTTPS
 video -right-> sound : локальный адаптер
