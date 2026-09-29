@@ -1,0 +1,28 @@
+@startuml
+!define RELATIVE_INCLUDE true
+!include ../../diagrams/vendor/c4-plantuml/C4_Container.puml
+LAYOUT_LANDSCAPE()
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam nodesep 50
+skinparam ranksep 100
+show stereotype
+title AgroWatch SaaS — C2, модель изоляции
+
+Person(a, "Сотрудник компании А", "Пользователь tenant А")
+Person(b, "Сотрудник компании Б", "Пользователь tenant Б")
+System_Boundary(saas, "AgroWatch SaaS — схема на клиента") {
+Container(app, "Общее приложение", "C# / ASP.NET Core", "Проверяет tenant и права;\nвыбирает схему из реестра")
+ContainerDb(db, "Общая БД", "PostgreSQL", "Схемы tenant_a и tenant_b;\nраздельные роли и GRANT")
+}
+Rel_R(app, db, "Явная схема + роль; без общего search_path", "SQL")
+Rel_R(a, app, "Запрос + token А", "HTTPS")
+Rel_R(b, app, "Запрос + token Б", "HTTPS")
+Lay_D(a, b)
+
+legend right
+|<#FFFFFF><color:#333333> Обозначения |
+|<#08427B><color:white> Пользователь |
+|<#438DD5><color:white> Контейнер |
+endlegend
+@enduml

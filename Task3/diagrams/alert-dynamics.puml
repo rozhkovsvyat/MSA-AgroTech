@@ -1,0 +1,55 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam shadowing false
+skinparam classBackgroundColor #85BBF0
+skinparam classBorderColor #1168BD
+skinparam ArrowColor #555555
+skinparam nodesep 45
+skinparam ranksep 70
+hide empty members
+title AgroWatch — вариант Б: Kafka и два канала тревоги
+hide footbox
+skinparam maxMessageSize 190
+participant "Видеоаналитика\nи локальный буфер" as v
+participant "Локальная Kafka" as k
+participant "Оповещение\nгруппа terminal" as nt
+participant "Терминал" as t
+participant "Оповещение\nгруппа siren" as ns
+participant "Сирена" as s
+participant "Инциденты / ИИ" as i
+v -> v : Кадр опасности → распознавание\n→ observation_id и буфер
+v -> k : ObservationRecorded, acks=all
+alt Kafka доступна, ISR >= 2
+ k --> v : ACK записи (не доставки)
+ par Канал терминала
+  k -> nt : Первое наблюдение
+  nt -> t : Карточка зоны / подрепорт
+  t --> nt : ACK получателя
+  nt -> k : Результат доставки + позиция
+ else Канал сирены
+  k -> ns : То же наблюдение, другая группа
+  alt Звук не подавлен за период простоя
+   ns -> s : Желаемое состояние, ID, версия
+   note right of s : Старая версия не отменяет новую
+   s --> ns : ACK получателя
+  else Подавлен сотрудником
+   ns -> ns : Сохранить случай без звука
+  end
+  ns -> k : Результат обработки + позиция
+ else Доменная обработка
+  k -> i : Наблюдение
+  i -> k : Канонический инцидент; позже рекомендация
+ end
+else Нет ACK / ISR < 2
+ v -> v : Pending; повтор с тем же ID\nдоставка задержана или исход неизвестен
+end
+note over v,s
+Окно 60 с и второй распознаватель не задерживают первый сигнал.
+P01 ≤ 5 с включает Kafka, выбор лидера, rebalance и получателя.
+Результат/позиция фиксируются после ACK; сбой между ними допускает повтор.
+Повторы ограничены сроком и числом попыток; новая версия выключения главнее.
+Звук включён по умолчанию; явное подавление — только за выбранный период.
+Историческая пересборка состояния не включает сирену.
+end note
+@enduml

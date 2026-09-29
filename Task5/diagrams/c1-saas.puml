@@ -1,0 +1,41 @@
+@startuml
+!define RELATIVE_INCLUDE true
+!include ../../diagrams/vendor/c4-plantuml/C4_Context.puml
+LAYOUT_LANDSCAPE()
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam nodesep 50
+skinparam ranksep 100
+show stereotype
+title AgroWatch SaaS — C1
+
+Person(user, "Сотрудник компании", "Представитель компании-клиента")
+Person(dev, "Разработчик клиента", "Автор интеграции компании")
+Person(duty, "Дежурный фермы", "Сотрудник смены на ферме")
+System(platform, "AgroWatch SaaS", "Облачный кабинет, интеграции, биллинг;\nизолированные данные компаний")
+System(farm, "Локальная система фермы", "Распознавание и тревога без интернета")
+System_Ext(iam, "Провайдер идентификации", "Вход и ключи подписи")
+System_Ext(payment, "ЮKassa", "Российская платёжная система")
+System_Ext(erp, "ERP клиента", "Производственный учёт")
+Person_Ext(ml, "Поставщик ML-модели", "Предобученная модель и версии")
+Rel_R(user, platform, "Кабинет и самообслуживание")
+Rel_R(dev, platform, "Использует API и dev-портал")
+Rel_R(duty, farm, "Реагирует через локальный терминал")
+Rel_R(farm, platform, "Передаёт факты; получает политики и ИИ")
+Rel_R(platform, iam, "Запрашивает идентификацию")
+Rel_R(platform, payment, "Создаёт платёж; сверяет статус")
+Rel_R(platform, erp, "Обменивается фактами и справочниками")
+Rel_R(ml, platform, "Передаёт версии модели")
+Lay_D(user, dev)
+Lay_D(dev, duty)
+Lay_D(iam, payment)
+Lay_D(payment, erp)
+
+legend right
+|<#FFFFFF><color:#333333> Обозначения |
+|<#08427B><color:white> Пользователь |
+|<#686868><color:white> Внешний участник |
+|<#1168BD><color:white> Программная система |
+|<#999999><color:white> Внешняя система |
+endlegend
+@enduml

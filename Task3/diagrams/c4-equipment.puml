@@ -1,0 +1,53 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam shadowing false
+skinparam classBackgroundColor #85BBF0
+skinparam classBorderColor #1168BD
+skinparam ArrowColor #555555
+skinparam nodesep 45
+skinparam ranksep 70
+hide empty members
+title AgroWatch — жизненный цикл команды (дополнение к C4)
+
+left to right direction
+state "Запрошена" as Requested
+state "Допущена" as Allowed
+state "Отправлена" as Sent
+state "Не выполнена: проверено" as NotExecuted
+state "Выполняется" as Running
+state "Исход неизвестен" as Unknown
+state "Частично выполнена" as Partial
+state "Выполнена" as Done
+state "Отказ / просрочка" as Rejected
+[*] --> Requested
+Requested --> Allowed : локальные права и лимиты
+Requested --> Rejected : запрет / истёк срок
+Allowed --> Sent : зафиксирована отправка ID и epoch
+Sent --> Running : исполнитель подтвердил приём
+Sent --> Unknown : нет подтверждения / timeout
+Allowed --> Rejected : срок истёк до отправки
+Running --> Done : подтверждён объём
+Running --> Partial : подтверждена часть
+Running --> Unknown : ответ потерян
+Unknown --> Done : результат проверен автоматически / сотрудником
+Unknown --> Partial : объём проверен автоматически / сотрудником
+Unknown --> NotExecuted : достоверно установлено неисполнение
+NotExecuted --> [*] : новая оценка потребности
+Unknown --> Unknown : сотрудник расследует, исход пока неизвестен
+Partial --> [*] : остаток — новая отдельная команда
+Done --> [*]
+Rejected --> [*]
+note bottom of Unknown
+Не повторять полную дозу по тайм-ауту.
+Автоматическая проверка, затем человек.
+Без fencing / дедупликации в исполнителе
+автоматическое переключение запрещено.
+end note
+
+legend right
+|= Обозначения |
+| UML: классы / состояния / участники подписаны |
+| Стрелка: вызов, зависимость или переход по подписи |
+endlegend
+@enduml

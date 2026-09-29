@@ -1,0 +1,53 @@
+@startuml
+!define RELATIVE_INCLUDE true
+!include ../../diagrams/vendor/c4-plantuml/C4_Container.puml
+LAYOUT_LANDSCAPE()
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam nodesep 50
+skinparam ranksep 100
+show stereotype
+title AgroWatch SaaS — C2, коммерческий контур
+
+Person(user, "Клиент / разработчик", "Представитель компании-клиента")
+System_Ext(idp, "Провайдер идентификации", "OIDC / JWKS")
+System_Ext(pay, "ЮKassa", "Платежи и уведомления")
+System_Boundary(saas, "AgroWatch SaaS — общий центральный контур") {
+ Container(portal, "Панель самообслуживания", "React + Vite MFE", "Оболочка и доменные модули;\nфермы, пользователи, тариф")
+ Container(devportal, "Dev-портал", "Static HTML / OpenAPI", "Документация, scope, sandbox")
+ Container(api, "Публичный API", "C# / ASP.NET Core", "JWT, tenant, scope, квоты;\nбиблиотека маршрутизации БД")
+ Container(provision, "Управление клиентами", "C# / .NET Worker", "Реестр tenant, provisioning,\nмиграции и безопасное удаление")
+ ContainerDb(reg, "Реестр размещения", "PostgreSQL", "tenant → DB, подписка, версия схемы")
+ ContainerDb(db, "БД клиентов", "PostgreSQL", "Отдельная БД на компанию")
+ Container(billing, "Биллинг", "C# / .NET", "Usage, счета, оплата, квоты")
+ ContainerDb(billdb, "БД биллинга", "PostgreSQL", "Платежи и идемпотентность")
+ ContainerDb(events, "Центральная Kafka", "Apache Kafka / оператор SaaS", "Факты и usage с tenant_id")
+ Container(project, "Проекции и интеграции", "C# / .NET", "Проверяет tenant; проекции и usage\nиз фактов ферм")
+}
+Rel_R(user, portal, "Самообслуживание", "HTTPS")
+Rel_R(user, devportal, "Читает и тестирует API", "HTTPS")
+Rel_R(portal, api, "Запрос + token", "HTTPS")
+Rel_R(devportal, api, "Sandbox-запросы", "HTTPS / scoped token")
+Rel_U(portal, idp, "Вход", "OIDC / PKCE")
+Rel_U(api, idp, "Кэширует JWKS", "HTTPS")
+Rel_R(api, provision, "Жизненный цикл клиента", "HTTPS")
+Rel_R(provision, reg, "Записывает размещение", "SQL")
+Rel_D(api, reg, "Читает проверенное размещение", "SQL / cache")
+Rel_D(api, db, "Tenant-подключение", "SQL")
+Rel_D(api, events, "Команды и usage", "Kafka / TLS")
+Rel_R(events, project, "Факты компании", "Kafka / TLS")
+Rel_R(project, db, "Обновляет проекции", "SQL")
+Rel_U(project, events, "Usage в отдельный топик", "Kafka / TLS")
+Rel_D(events, billing, "Usage с event_id", "Kafka / TLS")
+Rel_R(billing, billdb, "Счета и платежи", "SQL")
+Rel_R(billing, pay, "Платёж / проверка статуса", "HTTPS API")
+Rel_R(pay, billing, "Уведомление для проверки", "HTTPS webhook")
+Rel_D(api, billing, "Тариф и статус подписки", "HTTPS")
+
+legend right
+|<#FFFFFF><color:#333333> Обозначения |
+|<#08427B><color:white> Пользователь |
+|<#438DD5><color:white> Контейнер |
+|<#999999><color:white> Внешняя система |
+endlegend
+@enduml

@@ -1,0 +1,34 @@
+@startuml
+!define RELATIVE_INCLUDE true
+!include ../../diagrams/vendor/c4-plantuml/C4_Container.puml
+LAYOUT_LANDSCAPE()
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam nodesep 50
+skinparam ranksep 100
+show stereotype
+title AgroWatch — C2, локальная эскалация / вариант Б
+
+System_Ext(mobile, "Мобильные получатели (AS-IS)", "Flutter-клиенты; доработка WSS по ЛВС")
+System_Boundary(farm, "Локальная часть AgroWatch") {
+Container(incidents, "Сервис инцидентов", "C# / .NET Worker", "Таймеры 2/5 минут; состояние из журнала")
+ContainerDb(bus, "Локальная Kafka", "Apache Kafka", "Наблюдения, принятие, эскалация; RF=4/minISR=2")
+Container(notify, "Сервис оповещения", "C# / .NET Worker", "Независимые группы получателей; повтор доставки")
+Container(terminal, "Терминал фермы", "React + Vite MFE; .NET агент", "Карточки и состояние доставки")
+}
+Person(reserve, "Резервный дежурный / руководитель", "Получает эскалацию при доступном устройстве")
+System_Ext(sound, "Локальная сигнализация", "Первичная тревога и повторный звук")
+BiRel_R(bus, incidents, "Состояние / команда эскалации", "Kafka / TLS")
+Rel_R(bus, notify, "Наблюдения / эскалации", "Kafka / TLS")
+Rel_R(notify, terminal, "Карточка / тревога", "HTTPS / mTLS")
+Rel_R(notify, mobile, "Уведомление адресату в ЛВС", "WSS / ЛВС")
+Rel_R(mobile, reserve, "Показывает тревогу", "UI")
+Rel_D(notify, sound, "Первичный / повторный сигнал", "Локальный адаптер")
+legend right
+|<#FFFFFF><color:#333333> Обозначения |
+|<#08427B><color:white> Пользователь |
+|<#438DD5><color:white> Контейнер |
+|<#999999><color:white> Внешняя система |
+endlegend
+
+@enduml

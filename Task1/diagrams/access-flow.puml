@@ -1,0 +1,51 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam dpi 130
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 250
+hide footbox
+title Доступ к AgroWatch — вход и проверка каждой операции\nДополнительная динамическая схема; не заменяет C1
+actor "Пользователь" as user
+participant "Терминал / веб-интерфейс\nAgroWatch" as ui #438DD5
+participant "Провайдер\nидентификации" as idp #999999
+participant "API AgroWatch\nПроверка доступа" as api #438DD5
+participant "Доменный\nобработчик" as domain #85BBF0
+
+group Вход при доступном провайдере (OIDC Authorization Code)
+ user -> ui : Открывает интерфейс
+ ui -> idp : Перенаправляет на вход (state, nonce, PKCE)
+ user -> idp : Подтверждает личность
+ idp --> ui : Возвращает код авторизации через браузер
+ ui -> idp : Обменивает код с проверкой PKCE
+ idp --> ui : Возвращает токены
+ ui -> ui : Проверяет ответ входа и ID token
+end
+
+api -> idp : Получает JWKS по HTTPS заранее
+api -> api : Кэширует ключи и версии политик
+
+group Каждая защищённая операция
+ user -> ui : Принимает инцидент / отправляет команду
+ ui -> api : Запрос + access token / offline grant
+ api -> api : Проверяет подпись, issuer, audience, срок;\nклиента, ферму и разрешение на действие
+ alt Проверки пройдены
+  api -> domain : Передаёт проверенную команду
+  domain -> domain : Проверяет бизнес-ограничения;\nдопуск оборудования окончательно на ферме
+  domain --> api : Результат либо отказ по доменным правилам
+  api --> ui : Возвращает результат
+ else Нет действительного доступа
+  api --> ui : Отказывает, обработчик не вызывается
+ end
+end
+note over ui, domain
+Без WAN: отдельный подписанный offline grant (farm, устройство, срок ≤ 8 ч)
+и отдельная согласованная процедура местного аварийного доступа.
+Новую сетевую аутентификацию без доступного провайдера эта схема не обещает.
+Автоматическое оповещение об опасности не ждёт входа пользователя.
+end note
+legend right
+|= Обозначения |
+| UML: классы / состояния / участники подписаны |
+| Стрелка: вызов, зависимость или переход по подписи |
+endlegend
+@enduml

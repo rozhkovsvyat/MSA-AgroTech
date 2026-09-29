@@ -1,0 +1,77 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam shadowing false
+skinparam classBackgroundColor #85BBF0
+skinparam classBorderColor #1168BD
+skinparam ArrowColor #555555
+skinparam nodesep 45
+skinparam ranksep 70
+hide empty members
+title AgroWatch — C4, Издатель наблюдений / вариант Б
+
+top to bottom direction
+class Observation <<value object>> {
+ +ObservationId: Guid
+ +TenantId: string
+ +FarmId: string
+ +SchemaVersion: int
+ +CameraId: string
+ +ZoneId: string
+ +OccurredAt: DateTimeOffset
+ +ProducerId: string
+ +ModelVersion: string
+ +Severity: Severity
+ +Evidence: IReadOnlyList<EvidenceRef>
+}
+class ObservationPublisher <<component>> {
+ +PublishAsync(detection: Detection): Task<Guid>
+}
+interface OutboxPort <<port to spool>> {
+ +AppendAsync(observation: Observation): Task
+ +GetPendingAsync(): Task<IReadOnlyList<Observation>>
+ +MarkPublishedAsync(observationId: Guid, receipt: AppendReceipt): Task
+}
+interface EventSink <<port of publication>> {
+ +AppendAsync(observation: Observation): Task<AppendReceipt>
+}
+class KafkaEventSink {
+  +AppendAsync(observation: Observation): Task<AppendReceipt>
+}
+ObservationPublisher --> Observation : создаёт ID один раз
+ObservationPublisher --> OutboxPort : сохраняет и будит worker
+EventSink <|.. KafkaEventSink
+class PublicationWorker <<external collaborator>> {
+ +FlushPendingAsync(): Task
+}
+PublicationWorker --> OutboxPort : читает задания / фиксирует ACK
+PublicationWorker --> EventSink : публикует факт
+note bottom of PublicationWorker
+Сотрудничающий класс компонента
+«Публикация фактов» из C3.
+Наблюдение хранится до ACK Kafka.
+end note
+note bottom of ObservationPublisher
+Нет прямой отправки терминалу или сирене.
+KafkaEventSink: acks=all, idempotent producer.
+Ошибка / неизвестный ACK: повтор с прежним ID.
+ACK означает запись, не доставку человеку.
+end note
+
+note right of Observation
+Типы C#/.NET: Guid, DateTimeOffset, Task<T>.
+Detection — входное обнаружение (камера, зона, время,
+серьёзность, ссылки на доказательства).
+Severity: enum {urgent, normal}.
+EvidenceRef: value object {uri: string, sha256: string}.
+AppendReceipt: value object {EventId: Guid,
+position: string, ConfirmedAt: DateTimeOffset}.
+JSON-имена полей задаются контрактом интеграций.
+end note
+
+legend right
+|= Обозначения |
+| UML: классы / состояния / участники подписаны |
+| Стрелка: вызов, зависимость или переход по подписи |
+endlegend
+@enduml

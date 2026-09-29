@@ -1,0 +1,47 @@
+@startuml
+!define RELATIVE_INCLUDE true
+!include ../../diagrams/vendor/c4-plantuml/C4_Container.puml
+LAYOUT_LANDSCAPE()
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam nodesep 50
+skinparam ranksep 100
+show stereotype
+title AgroWatch — C2, ферма / вариант А
+
+Person(duty, "Дежурный", "Сотрудник смены")
+System_Ext(cam, "IP-камеры", "Видео зон фермы")
+System_Ext(sound, "Локальная сигнализация", "Параллельный канал тревоги")
+System(center, "Центр AgroWatch", "Отчёты, политики, рекомендации")
+System_Boundary(farm, "Локальная часть AgroWatch") {
+  Container(video, "Видеоаналитика", "C# / ML SDK", "Захват, распознавание, прямая доставка;\nлокальный буфер повторов")
+  Container(ui, "Терминал фермы", "React + Vite MFE; .NET агент", "Немедленные тревоги, группировка,\nкарточки и команды сотрудника")
+  Container(app, "Приложение фермы", "C# / .NET", "Инциденты, ответственность, сроки;\nпроверка прав и команд")
+  ContainerDb(bus, "Журнал и outbox", "PostgreSQL", "История фактов; доставка потребителям")
+  ContainerDb(read, "Локальные проекции", "PostgreSQL", "Карточки, справочники, учёт;\nпроизводное состояние")
+  Container(sync, "Синхронизация", "C# / .NET Worker", "Передаёт факты, принимает политики и ИИ")
+}
+Rel_R(cam, video, "Видео", "RTSP / ЛВС")
+Rel_R(video, ui, "Немедленная тревога + observation_id", "HTTPS / mTLS")
+Rel_R(video, sound, "Немедленный сигнал + ID", "Локальный адаптер")
+Rel_D(video, bus, "Сохраняет наблюдения; повторы из буфера", "SQL")
+Rel_R(duty, ui, "Читает, принимает, закрывает", "Локальный UI")
+Rel_D(ui, app, "Запросы и команды", "HTTPS / access token")
+Rel_R(app, bus, "Читает наблюдения, пишет факты", "SQL / транзакция")
+Rel_D(app, read, "Восстанавливает и читает проекции", "SQL")
+Rel_R(app, ui, "Уточняет каноническую карточку", "SSE / HTTPS")
+Rel(sync, app, "Политики, рекомендации, намерения", "HTTPS / mTLS")
+BiRel_R(sync, center, "Факты вверх; политики и ИИ вниз", "HTTPS")
+Rel(bus, sync, "Факты из outbox по позиции", "SQL")
+
+Lay_D(cam, duty)
+Lay_D(ui, sound)
+
+legend right
+|<#FFFFFF><color:#333333> Обозначения |
+|<#08427B><color:white> Пользователь |
+|<#438DD5><color:white> Контейнер |
+|<#1168BD><color:white> Программная система |
+|<#999999><color:white> Внешняя система |
+endlegend
+@enduml

@@ -1,0 +1,41 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam shadowing false
+skinparam classBackgroundColor #85BBF0
+skinparam classBorderColor #1168BD
+skinparam ArrowColor #555555
+skinparam nodesep 45
+skinparam ranksep 70
+hide empty members
+title AgroWatch — размещение / вариант А
+
+left to right direction
+node "ЛВС камер\n16 камер (допущение)" as cams
+node "Единственный сервер фермы" as pool {
+ artifact "Видеоаналитика: 16 обработок" as video
+ artifact "Приложение фермы + фоновые задачи" as app
+ artifact "Синхронизация / outbox sender" as sync
+ database "PostgreSQL: журнал, outbox, проекции" as log
+}
+node "Терминал\nс локальным агентом" as term
+node "Сигнализация\nотдельное питание / канал" as sound
+cloud "Центр AgroWatch\nHTTPS gateway / медиа / SaaS" as center
+cams --> video : RTSP / проводная PoE-ЛВС
+video -down-> term : прямая тревога / HTTPS
+video -right-> sound : локальный адаптер
+video --> log : запись фактов
+app -down-> term : карточки / HTTPS
+log --> sync : чтение outbox / SQL
+sync --> center : HTTPS / факты и политики
+note bottom of pool
+Один сервер: отказ прекращает распознавание.
+Терминал и сирена не заменяют модель.
+end note
+
+legend right
+|= Обозначения |
+| Узел — устройство; artifact — развёрнутый процесс |
+| Связь — сетевое / локальное взаимодействие |
+endlegend
+@enduml

@@ -1,0 +1,42 @@
+@startuml
+!define RELATIVE_INCLUDE true
+!include ../../diagrams/vendor/c4-plantuml/C4_Container.puml
+LAYOUT_LEFT_RIGHT()
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam nodesep 50
+skinparam ranksep 55
+show stereotype
+title AgroWatch — C2, центральная часть пилота
+
+Person(user, "Сотрудник компании", "Ответственный за показатели ферм")
+System(farm, "AgroWatch на ферме", "Локальная Kafka / журнал, терминал")
+System_Ext(erp, "ERP и BI компании", "1С:Агро, аналитика")
+System_Ext(ui, "Кабинеты сотрудников (AS-IS)", "Существующие web / mobile-клиенты AgroTech")
+ContainerDb_Ext(kafka, "Центральная Kafka (AS-IS)", "Apache Kafka / платформа AgroTech X", "Выделенные топики и квоты AgroWatch")
+System_Boundary(center, "Центр AgroWatch") {
+
+ Container(api, "Центральный API", "C# / ASP.NET Core", "Проверка токена, прав и tenant;\nмаршрутизация к БД через библиотеку")
+ Container(sync, "Шлюз синхронизации", "Kafka Connect / MirrorMaker 2; HTTPS", "Копирует факты вверх; политики и ИИ вниз;\nпринимает outbox варианта А")
+ Container(project, "Проекции и интеграции", "C# / .NET", "Учёт, прогнозы, метрики,\nполитики и обмен с ERP")
+ ContainerDb(db, "БД клиентов", "PostgreSQL", "Отдельная БД на компанию")
+}
+Rel_D(user, ui, "Использует", "HTTPS")
+Rel_D(ui, api, "Запрос + access token", "HTTPS")
+BiRel_L(sync, farm, "Факты вверх; политики вниз", "Б: Kafka / mTLS; А: HTTPS")
+BiRel_R(sync, kafka, "Факты вверх; намерения вниз", "Kafka / TLS")
+Rel_D(api, kafka, "Намерения и политики", "Kafka / TLS")
+Rel_R(api, db, "Tenant-подключение", "SQL")
+Rel_R(kafka, project, "Факты с позиции", "Kafka / TLS")
+Rel_U(project, db, "Tenant-проекции", "SQL")
+Rel_R(project, erp, "Справочники и агрегаты", "HTTPS / API")
+
+legend right
+|<#FFFFFF><color:#333333> Обозначения |
+|<#08427B><color:white> Пользователь |
+|<#438DD5><color:white> Контейнер |
+|<#1168BD><color:white> Программная система |
+|<#999999><color:white> Внешняя система |
+|<#B3B3B3><color:white> Внешний контейнер |
+endlegend
+@enduml

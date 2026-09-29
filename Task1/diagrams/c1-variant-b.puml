@@ -1,0 +1,58 @@
+@startuml
+!define RELATIVE_INCLUDE true
+!include ../../diagrams/vendor/c4-plantuml/C4_Context.puml
+LAYOUT_LANDSCAPE()
+skinparam nodesep 25
+skinparam ranksep 90
+skinparam defaultFontName Arial
+skinparam dpi 130
+show stereotype
+
+title
+AgroWatch — диаграмма контекста (C1)
+Вариант Б — распределённая обработка
+end title
+
+Person(duty, "Дежурный фермы", "Сотрудник смены\nна территории фермы")
+Person(manager, "Сотрудник компании", "Ответственный за хозяйство\nи показатели компании")
+Person_Ext(partner, "Поставщик ML-модели", "Внешний разработчик\nмодели распознавания")
+System_Ext(clients, "Кабинеты сотрудников (AS-IS)", "Существующие web-\nи мобильные приложения")
+System_Ext(data, "Платформа данных (AS-IS)", "События, медиаархив\nи бизнес-аналитика компании")
+System(core, "AgroWatch", "Распознавание опасностей,\nоповещение и управление оборудованием")
+System_Ext(cameras, "Система IP-камер", "Камеры разных производителей\nв зонах наблюдения")
+System_Ext(iam, "Провайдер идентификации", "Учётные записи сотрудников\nи службы идентификации")
+System_Ext(equip, "Системы оборудования", "Кормушки, поилки\nи фильтры разных производителей")
+System_Ext(alarm, "Локальная сигнализация", "Звуковой / световой\nоповещатель на ферме")
+System_Ext(erp, "ERP 1С:Агро (AS-IS)", "Справочники компании\nи производственный учёт")
+
+Rel_R(duty, core, "Работает с инцидентами\nи командами на терминале")
+Rel_R(manager, clients, "Запрашивает отчёты\nи задаёт настройки")
+Rel_R(clients, core, "Вызывает API наблюдения")
+Rel_R(core, data, "Передаёт события и медиа,\nпубликует метрики")
+Rel_R(partner, core, "Передаёт пакет модели")
+Rel_R(core, cameras, "Запрашивает видеопотоки")
+Rel_R(core, iam, "Запрашивает идентификацию\nпользователя")
+Rel_R(core, equip, "Передаёт команды,\nзапрашивает состояние")
+Rel_R(core, alarm, "Запускает местное\nоповещение об опасности")
+Rel_R(core, erp, "Получает справочники,\nпередаёт факты и метрики")
+Lay_D(duty, manager)
+Lay_D(manager, partner)
+Lay_D(cameras, iam)
+Lay_D(iam, equip)
+Lay_D(equip, alarm)
+Lay_D(alarm, erp)
+Lay_D(erp, data)
+
+note bottom of core
+Б: пул вычислителей фермы.
+Размещение раскрыто на deployment и C2.
+end note
+
+legend right
+|<#FFFFFF><color:#333333> Обозначения |
+|<#08427B><color:white> Пользователь |
+|<#686868><color:white> Внешний участник |
+|<#1168BD><color:white> Программная система |
+|<#999999><color:white> Внешняя система |
+endlegend
+@enduml

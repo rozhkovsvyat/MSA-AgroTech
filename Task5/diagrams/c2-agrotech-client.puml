@@ -1,0 +1,47 @@
+@startuml
+!define RELATIVE_INCLUDE true
+!include ../../diagrams/vendor/c4-plantuml/C4_Container.puml
+LAYOUT_LANDSCAPE()
+skinparam defaultFontName Arial
+skinparam dpi 110
+skinparam nodesep 50
+skinparam ranksep 100
+show stereotype
+title AgroTech X как клиент SaaS — C2, фермы и данные
+
+Person(duty, "Дежурный", "Сотрудник смены")
+Person(manager, "Сотрудник AgroTech X", "Ответственный за хозяйство")
+System_Ext(cab, "Кабинеты сотрудников (AS-IS)", "Существующие web / mobile-клиенты AgroTech")
+System_Boundary(local, "Фермы AgroTech X — повторяемая локальная часть") {
+ Container(notify, "Оповещение ферм", "C# / .NET Worker", "Доставка терминалу и сирене")
+ Container(ui, "Терминалы ферм", "React + Vite MFE; .NET агент", "Тревоги без WAN")
+ Container(video, "Видеоаналитика", "C# / ML SDK", "Распознавание и публикация наблюдений")
+ ContainerDb(farm, "Журналы ферм 1…N", "Apache Kafka", "Кластер на ферму; RF=4 / minISR=2")
+}
+System_Boundary(cloud, "AgroWatch SaaS — общий центр") {
+ Container(sync, "Шлюз синхронизации", "MirrorMaker 2", "Однонаправленные allowlist топики")
+ ContainerDb(kafka, "Центральная Kafka", "Apache Kafka", "tenant/farm в namespace и ACL")
+ Container(project, "Проекции и интеграции", "C# / .NET", "Потребитель с проверкой tenant")
+ ContainerDb(db, "БД AgroTech X", "PostgreSQL", "Только данные компании")
+
+ Container(api, "Центральный API", "C# / .NET", "Tenant и права; маршрутизация БД")
+}
+Rel_R(duty, ui, "Реагирует", "UI / ЛВС")
+Rel_R(farm, notify, "Наблюдения", "Kafka / TLS")
+Rel_R(notify, ui, "Тревога с ID", "HTTPS")
+Rel_D(video, farm, "Наблюдения", "Kafka / TLS")
+Rel_R(farm, sync, "Факты вверх; политики вниз", "Kafka / mTLS")
+Rel_R(sync, kafka, "Репликация по allowlist", "Kafka / TLS")
+Rel_R(kafka, project, "Чтение с позиции", "Kafka / TLS")
+Rel_R(project, db, "Tenant-проекция", "SQL")
+Rel_R(manager, cab, "Смотрит отчёты", "HTTPS")
+Rel_R(cab, api, "Запрос + token", "HTTPS")
+Rel_R(api, db, "Подключение AgroTech X", "SQL")
+
+legend right
+|<#FFFFFF><color:#333333> Обозначения |
+|<#08427B><color:white> Пользователь |
+|<#438DD5><color:white> Контейнер |
+|<#999999><color:white> Внешняя система |
+endlegend
+@enduml
